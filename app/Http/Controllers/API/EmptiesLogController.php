@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmptiesReceivingLog;
 use Illuminate\Http\Request;
 
 class EmptiesLogController extends Controller
@@ -13,6 +14,12 @@ class EmptiesLogController extends Controller
     public function index()
     {
         //
+        $emptiesReceivingLogs = EmptiesReceivingLog::with("product")->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $emptiesReceivingLogs
+        ]);
     }
 
     /**

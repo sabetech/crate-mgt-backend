@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(["prefix" => "v1"], function () {
-    Route::apiResource("empties", \App\Http\Controllers\API\EmptiesLogController::class);
+    Route::apiResource("empties-receiving-logs", \App\Http\Controllers\API\EmptiesLogController::class);
 });
