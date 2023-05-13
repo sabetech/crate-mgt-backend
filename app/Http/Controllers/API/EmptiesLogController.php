@@ -14,7 +14,7 @@ class EmptiesLogController extends Controller
     public function index()
     {
         //
-        $emptiesReceivingLogs = EmptiesReceivingLog::with("product")->get();
+        $emptiesReceivingLogs = EmptiesReceivingLog::with("products")->get();
 
         return response()->json([
             "success" => true,

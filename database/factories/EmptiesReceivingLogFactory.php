@@ -18,7 +18,6 @@ class EmptiesReceivingLogFactory extends Factory
     {
         return [
             'date' => $this->faker->date(),
-            'product_id' => $this->faker->numberBetween(1, 10),
             'quantity_received' => $this->faker->numberBetween(1, 100),
             'vehicle_number' => $this->faker->word(),
             'purchase_order_number' => $this->faker->word(),

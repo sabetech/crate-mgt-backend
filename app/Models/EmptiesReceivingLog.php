@@ -12,7 +12,6 @@ class EmptiesReceivingLog extends Model
 
     protected $fillable = [
         'date',
-        'product_id',
         'quantity_received',
         'vehicle_number',
         'purchase_order_number',
@@ -21,8 +20,8 @@ class EmptiesReceivingLog extends Model
         'image_reference',
     ];
 
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class, 'empties_log_products', 'empties_log_id', 'product_id')->withPivot('quantity');
     }
 }
