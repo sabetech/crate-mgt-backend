@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empties_returning_logs', function (Blueprint $table) {
-            $table->id();
-            $table->date('date');
-            $table->integer('quantity');
-            $table->string('vehicle_number');
-            $table->string('returned_by');
-            $table->timestamps();
+        Schema::table('products', function (Blueprint $table) {
+            //
+            $table->string('sku_code')->after('sku_name');
         });
     }
 
@@ -26,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empties_returning_logs');
+        Schema::table('products', function (Blueprint $table) {
+            //
+            $table->dropColumn('sku_code');
+        });
     }
 };

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empties_returning_logs', function (Blueprint $table) {
+        Schema::create('empties_returning_logs_products', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->foreignId('empties_returning_log_id')->constrained('empties_returning_logs');
+            $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity');
-            $table->string('vehicle_number');
-            $table->string('returned_by');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empties_returning_logs');
+        Schema::dropIfExists('empties_returning_logs_products');
     }
 };
