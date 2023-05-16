@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EmptiesReceivingLog;
 use App\Models\EmptiesReturningLogs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmptiesLogController extends Controller
 {
@@ -40,6 +41,22 @@ class EmptiesLogController extends Controller
     public function store(Request $request)
     {
         //
+        Log::info($request->all());
+
+        // $emptiesLog = new EmptiesReceivingLog();
+        // $emptiesLog->date = $request->get('date');
+        // $emptiesLog->vehicleNumber = $request->get('vehicle_number');
+        // $emptiesLog->purchase_order_number = $request->get('purchase_order_number');
+        // $emptiesLog->received_by = $request->get('received_by');
+        // $emptiesLog->delivered_by = $request->get('image_reference');
+        // $emptiesLog->quantity = 0;
+        // $emptiesLog->save();
+
+
+        return response()->json([
+            "success" => true,
+            "message" => "Empty Log was saved successfully"
+        ]);
     }
 
     /**

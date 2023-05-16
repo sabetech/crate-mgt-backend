@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         
-        \App\Models\EmptiesReceivingLog::factory(10)->create();
+        
 
     }
 }
