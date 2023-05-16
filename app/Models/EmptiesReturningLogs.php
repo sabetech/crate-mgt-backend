@@ -9,5 +9,9 @@ class EmptiesReturningLogs extends Model
 {
     use HasFactory;
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'empties_returning_logs_products', 'empties_returning_log_id', 'product_id')->withPivot('quantity');
+    }
     
 }

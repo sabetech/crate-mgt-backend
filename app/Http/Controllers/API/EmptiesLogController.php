@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmptiesReceivingLog;
+use App\Models\EmptiesReturningLogs;
 use Illuminate\Http\Request;
 
 class EmptiesLogController extends Controller
@@ -19,6 +20,17 @@ class EmptiesLogController extends Controller
         return response()->json([
             "success" => true,
             "data" => $emptiesReceivingLogs
+        ]);
+    }
+
+    public function getEmptiesReturned() {
+        //Get empties returned logs
+
+        $emptiesReturnedLogs = EmptiesReturningLogs::with("products")->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $emptiesReturnedLogs
         ]);
     }
 
