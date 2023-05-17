@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(["prefix" => "v1"], function () {
     Route::apiResource("empties-receiving-logs", \App\Http\Controllers\API\EmptiesLogController::class);
     Route::get("empties-returned-logs", [\App\Http\Controllers\API\EmptiesLogController::class, 'getEmptiesReturned']);
+    Route::post("empties-returned-logs", [\App\Http\Controllers\API\EmptiesLogController::class, 'postEmptiesReturned']);
     Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
 });

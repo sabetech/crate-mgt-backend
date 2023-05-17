@@ -35,6 +35,29 @@ class EmptiesLogController extends Controller
         ]);
     }
 
+    public function postEmptiesReturned(Request $request) {
+        Log::info("EVERYKEY::", $request->all());
+        Log::info($request->get('products'));
+
+        $emptiesReturnedLogs = new EmptiesReturningLogs();
+        $emptiesReturnedLogs->date = $request->get('date');
+        $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
+        $emptiesReturnedLogs->returned_by = $request->get('returned_by');
+        $emptiesReturnedLogs->quantity = $request->get('quantity_returned');
+
+        if ($emptiesReturnedLogs->save()) {
+            $attributes = json_decode($request->get('products'), true);
+            Log::info("Convert to array::", $attributes);
+            $emptiesReturnedLogs->products()->attach($emptiesReturnedLogs->id, json_decode($request->get('products'), true) );
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Empty Log was saved successfully"
+        ]);
+
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -51,11 +74,19 @@ class EmptiesLogController extends Controller
         // $emptiesLog->delivered_by = $request->get('image_reference');
         // $emptiesLog->quantity = 0;
         // $emptiesLog->save();
+        // $("#aliquot_id").on('change', function() {
+        //     if ($(this).value().length > 0) {
+        //         $("#daterange").attr('disabled', true)
+        //     }else{
+        //         $("#daterange").attr('disabled', false)
+        //     }
+            
+        // });
 
 
         return response()->json([
             "success" => true,
-            "message" => "Empty Log was saved successfully"
+            "data" => "Empty Log was saved successfully"
         ]);
     }
 
