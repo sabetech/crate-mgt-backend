@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmptiesLogProduct;
 use App\Models\EmptiesReceivingLog;
 use App\Models\EmptiesReturningLogs;
+use App\Models\EmptiesReturningLogsProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class EmptiesLogController extends Controller
 {
@@ -36,19 +39,23 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesReturned(Request $request) {
-        Log::info("EVERYKEY::", $request->all());
-        Log::info($request->get('products'));
 
         $emptiesReturnedLogs = new EmptiesReturningLogs();
         $emptiesReturnedLogs->date = $request->get('date');
         $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
         $emptiesReturnedLogs->returned_by = $request->get('returned_by');
-        $emptiesReturnedLogs->quantity = $request->get('quantity_returned');
+        $emptiesReturnedLogs->quantity = $request->get('quantity');
 
         if ($emptiesReturnedLogs->save()) {
-            $attributes = json_decode($request->get('products'), true);
-            Log::info("Convert to array::", $attributes);
-            $emptiesReturnedLogs->products()->attach($emptiesReturnedLogs->id, json_decode($request->get('products'), true) );
+            $attributes = json_decode($request->get('products'));
+            
+            foreach($attributes as $attrib) {
+                $emptiesReturningProductLogs = new EmptiesReturningLogsProduct();
+                $emptiesReturningProductLogs->product_id = $attrib->product_id;
+                $emptiesReturningProductLogs->quantity = $attrib->quantity;
+                $emptiesReturningProductLogs->empties_returning_log_id = $emptiesReturnedLogs->id;
+                $emptiesReturningProductLogs->save();
+            }
         }
 
         return response()->json([
@@ -65,25 +72,34 @@ class EmptiesLogController extends Controller
     {
         //
         Log::info($request->all());
-
-        // $emptiesLog = new EmptiesReceivingLog();
-        // $emptiesLog->date = $request->get('date');
-        // $emptiesLog->vehicleNumber = $request->get('vehicle_number');
-        // $emptiesLog->purchase_order_number = $request->get('purchase_order_number');
-        // $emptiesLog->received_by = $request->get('received_by');
-        // $emptiesLog->delivered_by = $request->get('image_reference');
-        // $emptiesLog->quantity = 0;
-        // $emptiesLog->save();
-        // $("#aliquot_id").on('change', function() {
-        //     if ($(this).value().length > 0) {
-        //         $("#daterange").attr('disabled', true)
-        //     }else{
-        //         $("#daterange").attr('disabled', false)
-        //     }
-            
-        // });
-
-
+        // Upload an Image File to Cloudinary with One line of Code
+        $uploadedFileUrl = Cloudinary::upload($request->file('image_ref')->getRealPath(), [
+            'folder' => 'Crate-Empties-Mgt'
+        ])->getSecurePath();
+        
+        // Access the uploaded image URL
+        
+        $emptiesLog = new EmptiesReceivingLog();
+        $emptiesLog->date = $request->get('date');
+        $emptiesLog->vehicle_number = $request->get('vehicle_number');
+        $emptiesLog->purchase_order_number = $request->get('purchase_order');
+        $emptiesLog->received_by = $request->get('received_by');
+        $emptiesLog->delivered_by = $request->get('delievered_by');
+        $emptiesLog->quantity_received = $request->get('quantity');
+        $emptiesLog->image_reference = $uploadedFileUrl;
+        
+        if ($emptiesLog->save()) {
+            //save the sub product quantities
+            $products = json_decode($request->get('product-quanties'));
+            foreach ($products as $product) {
+                $emptiesLogProduct = new EmptiesLogProduct();
+                $emptiesLogProduct->empties_log_id = $emptiesLog->id;
+                $emptiesLogProduct->product_id = $product->product;
+                $emptiesLogProduct->quantity = $product->quantity;
+                $emptiesLogProduct->save();
+            }
+        }
+        
         return response()->json([
             "success" => true,
             "data" => "Empty Log was saved successfully"
@@ -112,5 +128,6 @@ class EmptiesLogController extends Controller
     public function destroy(string $id)
     {
         //
+
     }
 }
