@@ -39,7 +39,7 @@ class AuthController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
         }
-        
+
         $user->tokens()->delete();
 
         return [
@@ -66,7 +66,9 @@ class AuthController extends Controller
         $token = $user->createToken('opktoken')->plainTextToken;
         $response = [
             'user'=> $user,
-            'token'=> $token
+            'token'=> $token,
+            'expires_at'=> 60 * 6,
+            'token_type'=> 'Bearer'
         ];
 
         return response($response, 201);
