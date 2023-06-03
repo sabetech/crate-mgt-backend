@@ -9,4 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
     protected $table = "customers";
+
+    public function customerEmptiesAccount(){
+        return $this->hasMany(CustomerEmptiesAccount::class);
+    }
 }

@@ -13,13 +13,20 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $requestType = $request->get('get-history', false);
+        $requestType = $request->get('with-balance', false);
 
         if (!$requestType) {
             $customers = Customer::all();
 
             return response()->json([
                 "success"=> true,
+                "data" => $customers
+            ]);
+        }else{
+            $customers = Customer::with('CustomerEmptiesAccount')->get();
+
+            return response()->json([
+                "success"=>true,
                 "data" => $customers
             ]);
         }
@@ -66,5 +73,9 @@ class CustomerController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function returnEmpties(Request $request) {
+        
     }
 }
