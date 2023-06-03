@@ -28,10 +28,9 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("empties-returned-logs", [\App\Http\Controllers\API\EmptiesLogController::class, 'postEmptiesReturned']);
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
         Route::apiResource("products", \App\Http\Controllers\API\ProductController::class);
+
+        Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
+
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
 });
-
-
-
-

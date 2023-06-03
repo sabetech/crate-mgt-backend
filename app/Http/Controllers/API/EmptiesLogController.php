@@ -39,11 +39,12 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesReturned(Request $request) {
-
+        Log::info($request->all());
         $emptiesReturnedLogs = new EmptiesReturningLogs();
         $emptiesReturnedLogs->date = $request->get('date');
         $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
         $emptiesReturnedLogs->returned_by = $request->get('returned_by');
+        $emptiesReturnedLogs->number_of_pallets = $request->get('pallets_number');
         $emptiesReturnedLogs->quantity = $request->get('quantity');
 
         if ($emptiesReturnedLogs->save()) {
@@ -82,6 +83,7 @@ class EmptiesLogController extends Controller
         $emptiesLog = new EmptiesReceivingLog();
         $emptiesLog->date = $request->get('date');
         $emptiesLog->vehicle_number = $request->get('vehicle_number');
+        $emptiesLog->number_of_pallets = $request->get('pallets_number');
         $emptiesLog->purchase_order_number = $request->get('purchase_order');
         $emptiesLog->received_by = $request->get('received_by');
         $emptiesLog->delivered_by = $request->get('delievered_by');
@@ -120,6 +122,7 @@ class EmptiesLogController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        
     }
 
     /**
