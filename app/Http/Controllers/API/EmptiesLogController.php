@@ -116,7 +116,6 @@ class EmptiesLogController extends Controller
         $quantity = $request->get('quantity');
         $products = $request->get('products');
 
-        Log::info($request->all());
         $emptiesOnGround = new EmptiesOnGroundLog;
         $emptiesOnGround->date = $date;
         $emptiesOnGround->quantity = $quantity;
@@ -126,14 +125,14 @@ class EmptiesLogController extends Controller
 
             $attributes = json_decode($request->get('products'));
             
-            Log::info($attributes);
+            // Log::info($attributes);
             
             foreach ($attributes as $product) {
                 
-                // Log::info($product);
+                Log::info(print_r($product, true));
 
                 $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
-                $emptiesOnGroundProduct->product_id = $product->product;
+                $emptiesOnGroundProduct->product_id = $product->product_id;
                 $emptiesOnGroundProduct->quantity = $product->quantity;
                 $emptiesOnGroundProduct->empties_on_ground_log_id = $emptiesOnGround->id;
                 $emptiesOnGroundProduct->is_empty = $product->is_empty;
