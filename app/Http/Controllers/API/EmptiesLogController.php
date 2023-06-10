@@ -7,6 +7,8 @@ use App\Models\EmptiesLogProduct;
 use App\Models\EmptiesReceivingLog;
 use App\Models\EmptiesReturningLogs;
 use App\Models\EmptiesReturningLogsProduct;
+use App\Models\EmptiesOnGroundProduct;
+use App\Models\EmptiesOnGroundLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -110,10 +112,47 @@ class EmptiesLogController extends Controller
 
     public function postEmptiesOnGround(Request $request) {
         $date = $request->get('date');
-        $pcs = $request->get('pcs');
+        $pcs = $request->get('pcs_number');
+        $quantity = $request->get('quantity');
+        $products = $request->get('products');
 
-        
+        Log::info($request->all());
+        $emptiesOnGround = new EmptiesOnGroundLog;
+        $emptiesOnGround->date = $date;
+        $emptiesOnGround->quantity = $quantity;
+        $emptiesOnGround->number_of_pcs = $pcs;
 
+        if ($emptiesOnGround->save()) {
+
+            $attributes = json_decode($request->get('products'));
+            
+            Log::info($attributes);
+            
+            foreach ($attributes as $product) {
+                
+                // Log::info($product);
+
+                $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
+                $emptiesOnGroundProduct->product_id = $product->product;
+                $emptiesOnGroundProduct->quantity = $product->quantity;
+                $emptiesOnGroundProduct->empties_on_ground_log_id = $emptiesOnGround->id;
+                $emptiesOnGroundProduct->is_empty = $product->is_empty;
+                $emptiesOnGroundProduct->date = $date;
+                $emptiesOnGroundProduct->save();
+            }
+
+            return response()->json([
+                "success" => true,
+                "data" => "Empty Log was saved successfully"
+            ]);
+
+        }else {
+
+            return response()->json([
+                "success" => false,
+                "data" => "Empty Log was not saved successfully"
+            ]);
+        }
     }
 
     /**

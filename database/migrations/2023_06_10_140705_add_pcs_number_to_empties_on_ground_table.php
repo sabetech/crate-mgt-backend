@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empties_on_ground_log', function (Blueprint $table) {
-            $table->id();
-            $table->string("date");
-            $table->integer("quantity");
-            $table->timestamps();
+        Schema::table('empties_on_ground_log', function (Blueprint $table) {
+
+            $table->integer('number_of_pcs')->after('quantity')->default(0);
         });
+
     }
 
     /**
@@ -24,6 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empties_on_ground_log');
+        Schema::table('empties_on_ground', function (Blueprint $table) {
+            //
+            $table->dropColumn('number_of_pcs');
+        });
     }
 };

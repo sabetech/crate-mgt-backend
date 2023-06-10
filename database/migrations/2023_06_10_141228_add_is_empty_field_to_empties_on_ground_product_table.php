@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empties_on_ground_log', function (Blueprint $table) {
-            $table->id();
-            $table->string("date");
-            $table->integer("quantity");
-            $table->timestamps();
+        Schema::table('empties_on_ground_products', function (Blueprint $table) {
+            //
+            $table->boolean('is_empty')->after('quantity')->default(true);
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empties_on_ground_log');
+        Schema::table('empties_on_ground_product', function (Blueprint $table) {
+            //
+        });
     }
 };
