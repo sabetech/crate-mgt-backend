@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\CustomerEmptiesAccount;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
@@ -75,7 +77,26 @@ class CustomerController extends Controller
         //
     }
 
-    public function returnEmpties(Request $request) {
-        
+    public function postReturnEmpties(Request $request) {
+
+        $products = json_decode($request->get('products'));
+
+        foreach ($products as $product) {
+
+            $newReturnEmpties = new CustomerEmptiesAccount;
+            $newReturnEmpties->customer_id = $request->customer;
+            $newReturnEmpties->product_id = $product->product_id;
+            $newReturnEmpties->quantity_transacted = $product->quantity;
+            $newReturnEmpties->date = $request->date;
+
+            $newReturnEmpties->save();
+
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Empties Returned by this customer has been saved successfully" 
+        ]);
+
     }
 }

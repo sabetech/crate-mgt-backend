@@ -108,6 +108,14 @@ class EmptiesLogController extends Controller
         ]);
     }
 
+    public function postEmptiesOnGround(Request $request) {
+        $date = $request->get('date');
+        $pcs = $request->get('pcs');
+
+        
+
+    }
+
     /**
      * Display the specified resource.
      */
