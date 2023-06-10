@@ -41,7 +41,7 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesReturned(Request $request) {
-        Log::info($request->all());
+        
         $emptiesReturnedLogs = new EmptiesReturningLogs();
         $emptiesReturnedLogs->date = $request->get('date');
         $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
@@ -110,6 +110,16 @@ class EmptiesLogController extends Controller
         ]);
     }
 
+    public function getEmptiesOnGround(Request $request) {
+        
+        $emptiesOnGround = EmptiesOnGroundLog::with("emptiesOnGroundProducts")->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $emptiesOnGround
+        ]);
+    }
+
     public function postEmptiesOnGround(Request $request) {
         $date = $request->get('date');
         $pcs = $request->get('pcs_number');
@@ -125,12 +135,7 @@ class EmptiesLogController extends Controller
 
             $attributes = json_decode($request->get('products'));
             
-            // Log::info($attributes);
-            
             foreach ($attributes as $product) {
-                
-                Log::info(print_r($product, true));
-
                 $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
                 $emptiesOnGroundProduct->product_id = $product->product_id;
                 $emptiesOnGroundProduct->quantity = $product->quantity;
