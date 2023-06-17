@@ -10,5 +10,9 @@ class EmptiesOnGroundProduct extends Model
     use HasFactory;
     protected $table = "empties_on_ground_products";
 
-    
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }

@@ -48,8 +48,6 @@ Route::group(["prefix" => "v1"], function () {
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
 
-
-
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
 });

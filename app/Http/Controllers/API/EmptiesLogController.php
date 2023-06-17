@@ -112,8 +112,10 @@ class EmptiesLogController extends Controller
 
     public function getEmptiesOnGround(Request $request) {
         
-        $emptiesOnGround = EmptiesOnGroundLog::with("emptiesOnGroundProducts")->get();
-
+        $emptiesOnGround = EmptiesOnGroundLog::with(["emptiesOnGroundProducts" => function ($query) {
+            $query->with("product");
+        }])->get();
+        
         return response()->json([
             "success" => true,
             "data" => $emptiesOnGround
@@ -173,7 +175,13 @@ class EmptiesLogController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        Log:info($request->all());
+        $result = EmptiesReceivingLog::where('id', $id)->update($request->all());
         
+        return response()->json([
+            "success" => true,
+            "data" => "Empty Log was updated successfully"
+        ]);
     }
 
     /**
