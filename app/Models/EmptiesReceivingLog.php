@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmptiesReceivingLog extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = "empties_receiving_log";
 
     protected $fillable = [

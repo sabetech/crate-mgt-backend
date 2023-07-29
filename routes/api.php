@@ -42,6 +42,9 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("empties-onground-log", [\App\Http\Controllers\API\EmptiesLogController::class, 'postEmptiesOnGround']);
         Route::get("empties-onground-log", [\App\Http\Controllers\API\EmptiesLogController::class, 'getEmptiesOnGround']);
 
+        Route::post("empties-loan", [\App\Http\Controllers\API\EmptiesLogController::class, 'postEmptiesLoan']);
+        Route::get("empties-loan", [\App\Http\Controllers\API\EmptiesLogController::class, 'getEmptiesLoan']);
+
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
         Route::apiResource("products", \App\Http\Controllers\API\ProductController::class);
 

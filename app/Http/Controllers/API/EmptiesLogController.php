@@ -169,6 +169,14 @@ class EmptiesLogController extends Controller
         //
     }
 
+    public function postEmptiesLoan(Request $request) {
+        
+    }
+
+    public function getEmptiesLoan(Request $request) {
+
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -190,6 +198,11 @@ class EmptiesLogController extends Controller
     public function destroy(string $id)
     {
         //
+        $result = EmptiesReceivingLog::where('id', $id)->delete();
 
+        return response()->json([
+            "success" => true,
+            "data" => "Empty Log was deleted successfully"
+        ]);
     }
 }
