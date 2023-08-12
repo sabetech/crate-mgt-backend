@@ -99,4 +99,17 @@ class CustomerController extends Controller
         ]);
 
     }
+
+    public function getCustomerHistory(Request $request, string $id ) {
+
+        $customerHistory = CustomerEmptiesAccount::where('customer_id', $id)
+            ->with('product')
+            ->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $customerHistory
+        ]);
+
+    }
 }
