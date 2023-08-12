@@ -104,6 +104,7 @@ class CustomerController extends Controller
 
         $customerHistory = CustomerEmptiesAccount::where('customer_id', $id)
             ->with('product')
+            ->orderBy('date', 'desc')
             ->get();
 
         return response()->json([
