@@ -10,4 +10,8 @@ class CustomerEmptiesAccount extends Model
     use HasFactory;
     protected $table = "customer_empties_account";
 
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+
 }
