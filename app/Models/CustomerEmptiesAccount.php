@@ -14,4 +14,8 @@ class CustomerEmptiesAccount extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function products() {
+        return $this->hasManyThrough(Product::class, CustomerEmptiesAccount::class, 'product_id', 'id', 'id', 'customer_id');
+    }
+
 }

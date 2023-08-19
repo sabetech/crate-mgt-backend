@@ -101,10 +101,11 @@ class CustomerController extends Controller
     }
 
     public function getCustomerHistory(Request $request, string $id ) {
-
-        $customerHistory = CustomerEmptiesAccount::where('customer_id', $id)
+        $customer = Customer::find($id);
+        $customerHistory = $customer->customerEmptiesAccount()
             ->with('product')
             ->orderBy('date', 'desc')
+            ->orderBy('transaction_type', 'asc')
             ->get();
 
         return response()->json([
