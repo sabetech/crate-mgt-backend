@@ -52,6 +52,8 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);
 
+        Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
+
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
 });
