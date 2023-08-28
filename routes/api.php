@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(["prefix" => "v1"], function () {
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
-    Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+    Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
     Route::get('/health', function() {
         return response()->json([
             "success" => true,
@@ -53,6 +53,8 @@ Route::group(["prefix" => "v1"], function () {
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);
 
         Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
+
+        Route::apiResource("users", \App\Http\Controllers\API\UserController::class);
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
