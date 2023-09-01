@@ -15,6 +15,9 @@ class UserController extends Controller
     {
         //Get all users
         $users = User::with('roles')->get();
+        foreach ($users as $user) {
+            $user->role = $user->roles->pluck('name');
+        }
 
         return response()->json([
             "success" => true,
@@ -33,14 +36,20 @@ class UserController extends Controller
         $user->email = $request->get("email");
         $user->password = bcrypt($request->get("password"));
         $user->assignRole($request->get("role"));
-        $user->save();
+        try{
+            $user->save();
+            $user->roles;
 
-        $user->roles;
-
-        return response()->json([
-            "success" => true,
-            "data" => $user
-        ]);
+            return response()->json([
+                "success" => true,
+                "data" => $user
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                "success" => false,
+                "message" => "User not added"
+            ], 400);
+        }
     }
 
     /**
@@ -69,6 +78,24 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                "success" => false,
+                "message" => "User not found"
+            ]);
+        }
+        $user->name = $request->get("name");
+        $user->email = $request->get("email");
+        $user->password = bcrypt($request->get("password"));
+        $user->syncRoles([]);
+        $user->assignRole($request->get("role"));
+        $user->save();
+
+        return response()->json([
+            "success" => true,
+            "data" => $user
+        ]);
     }
 
     /**
@@ -77,5 +104,20 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+        $user = User::find($id);
+        if (!$user) {
+           
+            return response()->json([
+                "success" => false,
+                "message" => "User not found"
+            ]);
+        
+        }
+        $user->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "User has been deleted!"
+        ]);
     }
 }
