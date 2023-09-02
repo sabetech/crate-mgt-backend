@@ -64,6 +64,7 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('opktoken')->plainTextToken;
+        $user->role = $user->roles->pluck('name')[0];
         $response = [
             'user'=> $user,
             'token'=> $token,

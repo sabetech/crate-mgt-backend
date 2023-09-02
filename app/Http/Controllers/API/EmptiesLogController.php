@@ -123,6 +123,8 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesOnGround(Request $request) {
+        Log::info($request->all());
+
         $date = $request->get('date');
         $pcs = $request->get('pcs_number');
         $quantity = $request->get('quantity');
@@ -135,7 +137,7 @@ class EmptiesLogController extends Controller
 
         if ($emptiesOnGround->save()) {
 
-            $attributes = json_decode($request->get('products'));
+            $attributes = json_decode($request->get('empties_on_ground_products'));
             
             foreach ($attributes as $product) {
                 $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
