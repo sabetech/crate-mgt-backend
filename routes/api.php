@@ -46,7 +46,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::get("empties-loan", [\App\Http\Controllers\API\EmptiesLogController::class, 'getEmptiesLoan']);
 
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
-        Route::apiResource("products", \App\Http\Controllers\API\ProductController::class);
+        Route::get("products-all", [\App\Http\Controllers\API\ProductController::class, 'getAllProducts']);
 
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
@@ -55,6 +55,12 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
 
         Route::apiResource("users", \App\Http\Controllers\API\UserController::class);
+
+        Route::group(["stocks"], function () {
+            Route::get("test", function () {
+                return "Group Working ...";
+            });
+        });
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });

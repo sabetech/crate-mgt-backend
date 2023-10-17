@@ -16,10 +16,15 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $requestType = $request->get('with-balance', false);
+        $customerType = $request->get('customer_type', null);
 
         if (!$requestType) {
-            $customers = Customer::all();
-
+            if ($customerType) {
+                $customers = Customer::where('customer_type', $customerType)->get();
+            }else {
+                $customers = Customer::all();
+            }
+            
             return response()->json([
                 "success"=> true,
                 "data" => $customers

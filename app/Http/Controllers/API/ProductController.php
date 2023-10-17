@@ -23,6 +23,18 @@ class ProductController extends Controller
     }
 
     /**
+     * Get all products.
+     */
+    public function getAllProducts() {
+        $products = Product::all();
+
+        return response()->json([
+            "success" => true,
+            "data" => $products
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -52,5 +64,9 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getProductsAndCurrentBalances() {
+        
     }
 }
