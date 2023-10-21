@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Stock;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -73,18 +74,29 @@ class ProductController extends Controller
         $date = $request->get('date');
         $products = $request->get('products');
         $breakages = $request->get('breakages');
-
+        $carbonDate = Carbon::createFromFormat('D, d M Y H:i:s e', $date);
+        $date = $carbonDate->format('Y-m-d');
         $user = Auth::user();
 
-        $allProducts = Products::all();
+        $allProducts = Product::all();
+
+        $products = json_decode($products, true);
+        $breakages = json_decode($breakages, true);
 
         $countedProdutsArray = [];
-        foreach ($products as $product) {
-            $countedProdutsArray[$product['id']] = $product['quantity'];
+        if ($products == null) {
+            $products = [];
         }
+        foreach ($products as $product) {
+            $countedProdutsArray[$product['product']] = $product['quantity'];
+        }
+        
         $breakagesQtyArray = [];
+        if ($breakages == null) {
+            $breakages = [];
+        }
         foreach ($breakages as $breakage) {
-            $breakagesQtyArray[$breakage['id']] = $breakage['quantity'];
+            $breakagesQtyArray[$breakage['product']] = $breakage['quantity'];
         }
 
         foreach($allProducts as $opkProducts) {

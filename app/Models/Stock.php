@@ -9,4 +9,5 @@ class Stock extends Model
 {
     use HasFactory;
     protected $table='stock';
+    protected $guarded = ['id'];
 }
