@@ -58,6 +58,7 @@ Route::group(["prefix" => "v1"], function () {
 
         Route::group(["prefix" => "stocks"], function () {
             Route::post("take-stock", [\App\Http\Controllers\API\ProductController::class, 'takeStock']);
+            Route::get("get-stock", [\App\Http\Controllers\API\ProductController::class, 'getStock']);
         });
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);

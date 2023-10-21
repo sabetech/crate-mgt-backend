@@ -70,6 +70,16 @@ class ProductController extends Controller
         //
     }
 
+    public function getStock(Request $request) {
+        $date = $request->get('date');
+        $stocks = Stock::where('date', $date)->with('product')->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $stocks
+        ]);
+    }
+
     public function takeStock(Request $request){
         $date = $request->get('date');
         $products = $request->get('products');
