@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Stock;
+use App\Models\Loadout;
+use App\Models\Customer;
 use Carbon\Carbon;
 
 class ProductController extends Controller
@@ -136,5 +138,56 @@ class ProductController extends Controller
 
     public function getProductsAndCurrentBalances() {
         
+    }
+
+    public function getLoadout(Request $request) {
+        $date = $request->get('date');
+        $loadout = Loadout::where('date', $date)->with(['product', 'customer'])->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $loadout
+        ]);
+    }
+
+    public function getLoadoutByVse(Request $request) {
+        $date = $request->get('date');
+
+        $VSEs = Customer::where('customer_type', 'retailer-vse')->with(['vseLoadout' => 
+            function ($query) use ($date) {
+                $query->where('date', $date)
+                    ->with(['product']);
+            }])->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $VSEs
+        ]);
+    }
+
+    public function postLoadout(Request $request) {
+        $date = $request->get('date');
+        $products = $request->get('products');
+        $customer = $request->get('vse');
+        $user = Auth::user();
+
+        Log::info($request->all());
+
+        $products = json_decode($products, true);
+
+        foreach ($products as $product) {
+            $loadout = new Loadout;
+            $loadout->date = $date;
+            $loadout->customer_id = $customer;
+            $loadout->product_id = $product['product'];
+            $loadout->quantity = $product['quantity'];
+            $loadout->user_id = $user->id;
+            $loadout->save();
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Loadout saved successfully"
+        ]);
     }
 }

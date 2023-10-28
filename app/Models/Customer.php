@@ -13,4 +13,8 @@ class Customer extends Model
     public function customerEmptiesAccount(){
         return $this->hasMany(CustomerEmptiesAccount::class);
     }
+
+    public function vseLoadout() {
+        return $this->hasMany(Loadout::class);
+    }
 }
