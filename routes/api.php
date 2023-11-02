@@ -64,6 +64,10 @@ Route::group(["prefix" => "v1"], function () {
             Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVse']);
         });
 
+        Route::group(["prefix" => "sales"], function () {
+            Route::post("pay", [\App\Http\Controllers\API\SalesController::class, 'pay']);
+        });
+
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
 });
