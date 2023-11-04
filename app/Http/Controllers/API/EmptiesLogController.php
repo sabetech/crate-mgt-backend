@@ -58,13 +58,25 @@ class EmptiesLogController extends Controller
                 $emptiesReturningProductLogs->quantity = $attrib->quantity;
                 $emptiesReturningProductLogs->empties_returning_log_id = $emptiesReturnedLogs->id;
                 $emptiesReturningProductLogs->save();
+
+                //update the empties on ground
+                reduceEmptiesOnGround($attrib->product_id, $attrib->quantity);
+
             }
         }
+
+        //deduct the empties from the companies account
 
         return response()->json([
             "success" => true,
             "data" => "Empty Log was saved successfully"
         ]);
+
+    }
+
+    public function reduceEmptiesOnGround() {
+        //Reduce the empties on ground
+
 
     }
 
