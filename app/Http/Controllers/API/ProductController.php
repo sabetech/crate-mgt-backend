@@ -136,8 +136,16 @@ class ProductController extends Controller
         ]);
     }
 
-    public function getProductsAndCurrentBalances() {
-        
+    public function getProductStockBalance() {
+        $products = Product::with(['stocks' => 
+            function ($query) {
+                $query->latest('date');
+           }])->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $products
+        ]);
     }
 
     public function getLoadout(Request $request) {

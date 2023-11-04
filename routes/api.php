@@ -48,6 +48,10 @@ Route::group(["prefix" => "v1"], function () {
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
         Route::get("products-all", [\App\Http\Controllers\API\ProductController::class, 'getAllProducts']);
 
+        Route::group(["prefix" => "products"], function () {
+            Route::get('balance', [\App\Http\Controllers\API\ProductController::class, 'getProductStockBalance']);
+        });
+
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);
