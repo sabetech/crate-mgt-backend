@@ -60,7 +60,7 @@ class EmptiesLogController extends Controller
                 $emptiesReturningProductLogs->save();
 
                 //update the empties on ground
-                reduceEmptiesOnGround($attrib->product_id, $attrib->quantity);
+                self::reduceEmptiesOnGround($attrib->product_id, $attrib->quantity);
 
             }
         }
@@ -74,9 +74,9 @@ class EmptiesLogController extends Controller
 
     }
 
-    public function reduceEmptiesOnGround() {
+    public function reduceEmptiesOnGround($product_id, $quantity) {
         //Reduce the empties on ground
-
+        
 
     }
 

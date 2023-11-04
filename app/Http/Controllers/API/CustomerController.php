@@ -30,8 +30,14 @@ class CustomerController extends Controller
                 "data" => $customers
             ]);
         }else{
-            $customers = Customer::with('CustomerEmptiesAccount')->get();
 
+            $customers = Customer::select();
+            if ($customerType) {
+                $customers = $customers->with('CustomerEmptiesAccount')->where('customer_type', $customerType)->get();
+            }else{
+                $customers = $customers->with('CustomerEmptiesAccount')->get();
+            }
+            
             return response()->json([
                 "success"=>true,
                 "data" => $customers
@@ -122,7 +128,7 @@ class CustomerController extends Controller
     public function postRecordVseSales(Request $request, string $id) {
         $customer = Customer::find($id);
         
-        $product_quantities = json_decode($request->get('product_quanties'));
+        $product_quantities = json_decode($request->get('product_quantities'));
         $empties_returned = json_decode($request->get('empties_returned'));
 
         foreach ($product_quantities as $product) {
