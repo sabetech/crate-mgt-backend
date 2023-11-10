@@ -70,6 +70,7 @@ Route::group(["prefix" => "v1"], function () {
 
         Route::group(["prefix" => "sales"], function () {
             Route::post("pay", [\App\Http\Controllers\API\SalesController::class, 'pay']);
+            Route::get("/", [\App\Http\Controllers\API\SalesController::class, 'sales']);
         });
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);

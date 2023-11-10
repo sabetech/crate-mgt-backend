@@ -13,6 +13,19 @@ use Auth;
 class SalesController extends Controller
 {
     //
+    public function sales(Request $request) {
+        $user_id = Auth::user()->id;
+
+        $sales = Order::with(['customer', 'sales' => function($query) {
+            $query->with('product');
+        }])->where('user_id', $user_id)->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $sales
+        ]);
+    }
+
     public function pay(Request $request) {
         $customerId = $request->get('customer');
         $customer = Customer::find($customerId);
@@ -23,8 +36,6 @@ class SalesController extends Controller
         $date = $request->get('date');
         $user_id = Auth::user()->id;
         $totalAmount = $request->get('total');
-
-        Log::info("VARS", $request->all());
 
         $saleItems = json_decode($saleItems, false);
 
