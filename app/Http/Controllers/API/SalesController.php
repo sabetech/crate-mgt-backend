@@ -30,27 +30,44 @@ class SalesController extends Controller
         $customerId = $request->get('customer');
         $customer = Customer::find($customerId);
 
+        $orderTransactionId = $request->get('order_transaction_id');
+        
+        $order = Order::where('transaction_id', $orderTransactionId)->first();
+        if ($order) {
+            $order->amount_tendered = $amountTendered;
+            $order->date = $date;
+            $order->user_id = $user_id;
+            $order->status = 'approved';
+
+            $order->save();
+
+            return response()->json([
+                "success" => true,
+                "data" => $order
+            ]);
+        }
+
+        $order = new Order;
         $saleItems = $request->get('saleItems');
         $amountTendered = $request->get('amountTendered');
         $paymentType = $request->get('paymentType');
         $date = $request->get('date');
         $user_id = Auth::user()->id;
         $totalAmount = $request->get('total');
-
-        $saleItems = json_decode($saleItems, false);
-
-        $order = new Order;
+        $order->amount_tendered = $amountTendered; //this is initially 0 since payment has not been made!
+        $order->date = $date;
         $order->customer_id = $customerId;
         $order->total_amount = $totalAmount;
-        $order->amount_tendered = $amountTendered;
         $order->payment_type = $paymentType;
-        $order->date = $date;
+        
         $order->user_id = $user_id;
+        
+        $saleItems = json_decode($saleItems, false);
 
         if ($customer->customer_type == 'wholesaler'){
-            $order->transaction_id = "OPK-WHL-".date("Ymd")."-".time()."-".$customer->id;
+            $order->transaction_id = "OPK-WHL-".time()."-".$customer->id;
         }else{
-            $order->transaction_id = "OPK-RET-".date("Ymd")."-".time()."-".$customer->id;
+            $order->transaction_id = "OPK-RET-".time()."-".$customer->id;
         }
         
         $order->save();
@@ -71,10 +88,13 @@ class SalesController extends Controller
                 ]
             );
 
+            return response()->json([
+                "success" => true,
+                "data" => $order
+            ]);
             //reduce inventory from here ...
             //track transactions here ... what ever this means
 
         }
-
     }
 }
