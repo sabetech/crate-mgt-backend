@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Models\Sale;
+use App\Events\SalesOrderCreated;
 use Auth;
 
 class SalesController extends Controller
@@ -27,11 +28,13 @@ class SalesController extends Controller
     }
 
     public function pay(Request $request) {
+        $user_id = Auth::user()->id;
         $customerId = $request->get('customer');
         $customer = Customer::find($customerId);
 
         $orderTransactionId = $request->get('order_transaction_id');
-        
+        $amountTendered = $request->get('amountTendered');
+        $date = $request->get('date');
         $order = Order::where('transaction_id', $orderTransactionId)->first();
         if ($order) {
             $order->amount_tendered = $amountTendered;
@@ -40,6 +43,9 @@ class SalesController extends Controller
             $order->status = 'approved';
 
             $order->save();
+            $order->quantity = $order->quantity();
+            
+            SalesOrderCreated::dispatch($order);
 
             return response()->json([
                 "success" => true,
@@ -49,10 +55,8 @@ class SalesController extends Controller
 
         $order = new Order;
         $saleItems = $request->get('saleItems');
-        $amountTendered = $request->get('amountTendered');
         $paymentType = $request->get('paymentType');
-        $date = $request->get('date');
-        $user_id = Auth::user()->id;
+        
         $totalAmount = $request->get('total');
         $order->amount_tendered = $amountTendered; //this is initially 0 since payment has not been made!
         $order->date = $date;
@@ -87,14 +91,12 @@ class SalesController extends Controller
                     'user_id' => $order->user_id
                 ]
             );
-
-            return response()->json([
-                "success" => true,
-                "data" => $order
-            ]);
             //reduce inventory from here ...
             //track transactions here ... what ever this means
-
         }
+        return response()->json([
+            "success" => true,
+            "data" => $order
+        ]);
     }
 }

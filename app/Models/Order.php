@@ -21,4 +21,12 @@ class Order extends Model
         return $this->hasMany(Sale::class, 'order_id', 'id');
     }
 
+    public function quantity() {
+        return $this->hasMany(Sale::class, 'order_id', 'id')->sum('quantity');
+    }
+
+    // public function products() {
+    //     return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id')->withPivot('quantity', 'price', 'total');
+    // }
+
 }

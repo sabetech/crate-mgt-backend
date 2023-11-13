@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Loadout extends Model
+class LoadoutProduct extends Model
 {
     use HasFactory;
-    protected $table = 'loadout';
+    protected $table = 'loadout_products';
     protected $guarded = ['id'];
 
     public function customer(){

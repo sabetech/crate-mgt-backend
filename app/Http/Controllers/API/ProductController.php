@@ -8,8 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Stock;
-use App\Models\Loadout;
+use App\Models\LoadoutProduct;
 use App\Models\Customer;
+use App\Models\InventoryOrder;
 use Carbon\Carbon;
 
 class ProductController extends Controller
@@ -148,9 +149,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function getLoadout(Request $request) {
+    public function getLoadoutProducts(Request $request) {
         $date = $request->get('date');
-        $loadout = Loadout::where('date', $date)->with(['product', 'customer'])->get();
+        $loadout = LoadoutProduct::where('date', $date)->with(['product', 'customer'])->get();
 
         return response()->json([
             "success" => true,
@@ -179,12 +180,10 @@ class ProductController extends Controller
         $customer = $request->get('vse');
         $user = Auth::user();
 
-        Log::info($request->all());
-
         $products = json_decode($products, true);
 
         foreach ($products as $product) {
-            $loadout = new Loadout;
+            $loadout = new LoadoutProduct;
             $loadout->date = $date;
             $loadout->customer_id = $customer;
             $loadout->product_id = $product['product'];
@@ -196,6 +195,19 @@ class ProductController extends Controller
         return response()->json([
             "success" => true,
             "data" => "Loadout saved successfully"
+        ]);
+    }
+
+    public function getPendingOrders() {
+        $pendingOrders = InventoryOrder::where('status', 'pending')->with(['order' => function($query) {
+            $query->with(['customer', 'sales' => function($query) {
+                $query->with('product');
+            }]);
+        }])->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $pendingOrders
         ]);
     }
 }
