@@ -28,6 +28,8 @@ class SalesController extends Controller
     }
 
     public function pay(Request $request) {
+        Log::info($request->all());
+
         $user_id = Auth::user()->id;
         $customerId = $request->get('customer');
         $customer = Customer::find($customerId);
@@ -44,7 +46,7 @@ class SalesController extends Controller
 
             $order->save();
             $order->quantity = $order->quantity();
-            
+
             SalesOrderCreated::dispatch($order);
 
             return response()->json([

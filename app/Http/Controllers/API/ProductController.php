@@ -210,4 +210,15 @@ class ProductController extends Controller
             "data" => $pendingOrders
         ]);
     }
+
+    public function approveOrder(InventoryOrder $inventoryOrder, Request $request) {
+       
+        $inventoryOrder->status = 'approved';
+        $inventoryOrder->save();
+
+        return response()->json([
+            "success" => true,
+            "data" => "Order approved successfully"
+        ]);
+    }
 }

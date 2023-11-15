@@ -67,6 +67,7 @@ Route::group(["prefix" => "v1"], function () {
             Route::get('loadouts', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutProducts']);
             Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVse']);
             Route::get('pending-orders', [\App\Http\Controllers\API\ProductController::class, 'getPendingOrders']);
+            Route::post('approve-order/{inventoryOrder}', [\App\Http\Controllers\API\ProductController::class, 'approveOrder']);
         });
 
         Route::group(["prefix" => "sales"], function () {
