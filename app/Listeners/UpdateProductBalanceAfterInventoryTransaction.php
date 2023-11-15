@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Listeners;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+
+class UpdateProductBalanceAfterInventoryTransaction
+{
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     */
+    public function handle(object $event): void
+    {
+        $inventoryTransaction = $event->inventoryTransaction;
+        $product = $inventoryTransaction->product;
+        $product->quantity = $inventoryTransaction->balance;
+        $product->save();
+        
+    }
+}

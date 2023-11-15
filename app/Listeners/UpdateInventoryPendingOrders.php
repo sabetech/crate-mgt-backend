@@ -21,7 +21,7 @@ class UpdateInventoryPendingOrders
      */
     public function handle(object $event): void
     {
-        //update the inventory orders table as a pending item to be remove .. 
+        //update the inventory orders table as a pending item
         InventoryOrder::create([
             'datetime' => now(),
             'order_id' => $event->order->id,

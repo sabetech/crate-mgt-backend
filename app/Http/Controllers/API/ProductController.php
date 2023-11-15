@@ -11,6 +11,7 @@ use App\Models\Stock;
 use App\Models\LoadoutProduct;
 use App\Models\Customer;
 use App\Models\InventoryOrder;
+use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
 
 class ProductController extends Controller
@@ -215,6 +216,8 @@ class ProductController extends Controller
        
         $inventoryOrder->status = 'approved';
         $inventoryOrder->save();
+        
+        InventoryOrderApproved::dispatch($inventoryOrder);
 
         return response()->json([
             "success" => true,

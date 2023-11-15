@@ -14,4 +14,8 @@ class Product extends Model
     public function stocks() {
         return $this->belongsTo(Stock::class, 'id', 'product_id');
     }
+
+    public function inventoryBalance() {
+        return $this->belongsTo(InventoryBalance::class, 'id', 'product_id');
+    }
 }

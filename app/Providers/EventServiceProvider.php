@@ -7,7 +7,11 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Events\SalesOrderCreated;
-use App\Listeners\UpdateInventoryPendingOrders;
+use App\Events\InventoryOrderApproved;
+use App\Events\InventoryTransactionCreated;
+use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
+use App\Listeners\UpdateCustomerEmptiesAfterInvenetoryTransaction;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -23,6 +27,13 @@ class EventServiceProvider extends ServiceProvider
         SalesOrderCreated::class => [
             UpdateInventoryPendingOrders::class,
         ],
+        InventoryOrderApproved::class => [
+            UpdateInventoryTransactionsAfterOrderApproval::class,
+        ],
+        InventoryTransactionCreated::class => [
+            UpdateProductBalanceAfterInventoryTransaction::class,
+            UpdateCustomerEmptiesAfterInvenetoryTransaction::class,
+        ]
     ];
 
     /**
