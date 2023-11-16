@@ -10,4 +10,5 @@ class InventoryBalance extends Model
     use HasFactory;
 
     protected $table = 'inventory_balance';
+    protected $guarded = ['id'];
 }

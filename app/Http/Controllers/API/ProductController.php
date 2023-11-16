@@ -84,7 +84,10 @@ class ProductController extends Controller
         ]);
     }
 
-    public function takeStock(Request $request){
+    public function takeStock(Request $request) {
+
+        //update product balances as you take stock
+
         $date = $request->get('date');
         $products = $request->get('products');
         $breakages = $request->get('breakages');
@@ -131,6 +134,8 @@ class ProductController extends Controller
                 );
             }
         }
+
+
 
         return response()->json([
             "success" => true,

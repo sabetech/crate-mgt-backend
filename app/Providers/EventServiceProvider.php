@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\Event;
 use App\Events\SalesOrderCreated;
 use App\Events\InventoryOrderApproved;
 use App\Events\InventoryTransactionCreated;
+use App\Events\StockTakenForProduct;
 use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
 use App\Listeners\UpdateCustomerEmptiesAfterInvenetoryTransaction;
+use App\Listeners\UpdateProductBalanceAfterStockTaken;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -33,7 +35,10 @@ class EventServiceProvider extends ServiceProvider
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
             UpdateCustomerEmptiesAfterInvenetoryTransaction::class,
-        ]
+        ],
+        StockTakenForProduct::class => [
+            UpdateProductBalanceAfterStockTaken::class,
+        ],
     ];
 
     /**
