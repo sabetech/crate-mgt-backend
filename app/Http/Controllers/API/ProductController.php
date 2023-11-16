@@ -144,10 +144,7 @@ class ProductController extends Controller
     }
 
     public function getProductStockBalance() {
-        $products = Product::with(['stocks' => 
-            function ($query) {
-                $query->latest('date');
-           }])->get();
+        $products = Product::with(['inventoryBalance'])->get();
 
         return response()->json([
             "success" => true,

@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Models\InventoryTransaction;
+use Illuminate\Support\Facades\Log;
 
 class UpdateInventoryTransactionsAfterOrderApproval
 {
@@ -23,8 +25,8 @@ class UpdateInventoryTransactionsAfterOrderApproval
         //
         $action = $event->action;
         switch($action) {
-            case 'approved_sale_order':
-                updateInventoryAfterOrderApproval($event->inventoryOrder);
+            case 'sale_request':
+                $this->updateInventoryAfterOrderApproval($event->inventoryOrder, $action);
             break;
             case 'approved_purchase_order':
             
@@ -44,12 +46,15 @@ class UpdateInventoryTransactionsAfterOrderApproval
         
     }
 
-    public function updateInventoryAfterOrderApproval($inventoryOrder) {
-        $order = $inventoryOrder;
+    public function updateInventoryAfterOrderApproval($inventoryOrder, $action) {
+        $order = $inventoryOrder->order;
+        Log::info('updateInventoryAfterOrderApproval');
+        Log::info($order);
+        Log::info($order->sales);
 
         foreach($order->sales as $sale) {
             
-            $previousBalance = $sale->product()->inventoryBalance->quantity;
+            $previousBalance = $sale->product->inventoryBalance->quantity;
 
             InventoryTransaction::create([
                 'date' => now(),

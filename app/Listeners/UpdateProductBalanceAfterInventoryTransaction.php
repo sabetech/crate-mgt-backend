@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Models\InventoryBalance;
+use Illuminate\Support\Facades\Log;
 
 class UpdateProductBalanceAfterInventoryTransaction
 {
@@ -21,9 +23,13 @@ class UpdateProductBalanceAfterInventoryTransaction
     public function handle(object $event): void
     {
         $inventoryTransaction = $event->inventoryTransaction;
+
+        Log::info('UpdateProductBalanceAfterInventoryTransaction');
+        Log::info($inventoryTransaction);
+        Log::info($inventoryTransaction->product);
         $product = $inventoryTransaction->product;
-        $product->quantity = $inventoryTransaction->balance;
+        $product->inventoryBalance->quantity = $inventoryTransaction->balance;
         $product->save();
-        
+
     }
 }

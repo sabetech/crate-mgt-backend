@@ -10,9 +10,11 @@ use App\Events\SalesOrderCreated;
 use App\Events\InventoryOrderApproved;
 use App\Events\InventoryTransactionCreated;
 use App\Events\StockTakenForProduct;
+use App\Listeners\UpdateInventoryPendingOrders;
 use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
 use App\Listeners\UpdateCustomerEmptiesAfterInvenetoryTransaction;
 use App\Listeners\UpdateProductBalanceAfterStockTaken;
+use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 
 
 class EventServiceProvider extends ServiceProvider

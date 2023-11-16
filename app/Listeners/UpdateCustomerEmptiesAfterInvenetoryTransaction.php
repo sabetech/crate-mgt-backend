@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Models\CustomerEmptiesAccount;
+use Illuminate\Support\Facades\Log;
 
 class UpdateCustomerEmptiesAfterInvenetoryTransaction
 {
@@ -22,6 +24,10 @@ class UpdateCustomerEmptiesAfterInvenetoryTransaction
     {
         //
         $inventoryTransaction = $event->inventoryTransaction;
+
+        Log::info("Inventory Order....");
+        Log::info($inventoryTransaction);
+
         CustomerEmptiesAccount::create([
             'date' => now(),
             'customer_id' => $inventoryTransaction->order->customer->id,

@@ -19,10 +19,10 @@ class InventoryOrderApproved
     /**
      * Create a new event instance.
      */
-    public function __construct(InventoryOrder $inventoryOrder)
+    public function __construct($inventoryOrder)
     {
         $this->inventoryOrder = $inventoryOrder;
-        $this->action = 'approved_sale_order';
+        $this->action = 'sale_request';
     }
 
     /**
