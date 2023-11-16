@@ -7,7 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\CustomerEmptiesAccount;
 use Illuminate\Support\Facades\Log;
 
-class UpdateCustomerEmptiesAfterInvenetoryTransaction
+class UpdateCustomerEmptiesAfterInventoryTransaction
 {
     /**
      * Create the event listener.
@@ -23,16 +23,22 @@ class UpdateCustomerEmptiesAfterInvenetoryTransaction
     public function handle(object $event): void
     {
         //
-        $inventoryTransaction = $event->inventoryTransaction;
+        $inventoryOrder = $event->inventoryOrder;
 
         Log::info("Inventory Order....");
-        Log::info($inventoryTransaction);
+        Log::info($inventoryOrder);
+        
+        $inventoryOrder->order->sales->each(function($sale) use ($inventoryOrder) {
+            $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);
+        });
+    }
 
+    public function updateCustomerEmptiesAccount($inventoryOrder, $sale) {
         CustomerEmptiesAccount::create([
             'date' => now(),
-            'customer_id' => $inventoryTransaction->order->customer->id,
-            'product_id' => $inventoryTransaction->product_id,
-            'quantity_transacted' => -$inventoryTransaction->quantity,
+            'customer_id' => $inventoryOrder->order->customer->id,
+            'product_id' => $sale->product_id,
+            'quantity_transacted' => -$inventoryOrder->quantity,
             'transaction_type' => 'out',
         ]);
     }

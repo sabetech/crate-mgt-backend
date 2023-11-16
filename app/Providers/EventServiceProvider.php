@@ -12,7 +12,7 @@ use App\Events\InventoryTransactionCreated;
 use App\Events\StockTakenForProduct;
 use App\Listeners\UpdateInventoryPendingOrders;
 use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
-use App\Listeners\UpdateCustomerEmptiesAfterInvenetoryTransaction;
+use App\Listeners\UpdateCustomerEmptiesAfterInventoryTransaction;
 use App\Listeners\UpdateProductBalanceAfterStockTaken;
 use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 
@@ -33,10 +33,11 @@ class EventServiceProvider extends ServiceProvider
         ],
         InventoryOrderApproved::class => [
             UpdateInventoryTransactionsAfterOrderApproval::class,
+            UpdateCustomerEmptiesAfterInventoryTransaction::class,
         ],
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
-            UpdateCustomerEmptiesAfterInvenetoryTransaction::class,
+            
         ],
         StockTakenForProduct::class => [
             UpdateProductBalanceAfterStockTaken::class,
