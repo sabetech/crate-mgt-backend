@@ -11,6 +11,7 @@ use App\Models\Stock;
 use App\Models\LoadoutProduct;
 use App\Models\Customer;
 use App\Models\InventoryOrder;
+use App\Models\InventoryReceivable;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
 
@@ -224,6 +225,30 @@ class ProductController extends Controller
         return response()->json([
             "success" => true,
             "data" => "Order approved successfully"
+        ]);
+    }
+
+    public function addReceivable(Request $request) {
+        $date = $request->get('date');
+        $products = $request->get('products');
+        $purchaseOrderId = $request->get('purchase_order_id');
+        $user = Auth::user();
+
+        $products = json_decode($products, true);
+
+        foreach ($products as $product) {
+            $inventoryReceivable = new InventoryReceivable;
+            $inventoryReceivable->date = $date;
+            $inventoryReceivable->purchase_order_number = $purchaseOrderId;
+            $inventoryReceivable->product_id = $product['product'];
+            $inventoryReceivable->quantity = $product['quantity'];
+            $inventoryReceivable->user_id = $user->id;
+            $inventoryReceivable->save();
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Inventory Receivable saved successfully"
         ]);
     }
 }

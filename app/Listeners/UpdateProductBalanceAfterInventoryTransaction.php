@@ -29,7 +29,7 @@ class UpdateProductBalanceAfterInventoryTransaction
         Log::info($inventoryTransaction->product);
         $product = $inventoryTransaction->product;
         $product->inventoryBalance->quantity = $inventoryTransaction->balance;
-        $product->save();
+        $product->inventoryBalance->save();
 
     }
 }

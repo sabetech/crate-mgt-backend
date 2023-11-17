@@ -63,6 +63,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::group(["prefix" => "stocks"], function () {
             Route::post("take-stock", [\App\Http\Controllers\API\ProductController::class, 'takeStock']);
             Route::get("get-stock", [\App\Http\Controllers\API\ProductController::class, 'getStock']);
+            Route::post("receivable", [\App\Http\Controllers\API\ProductController::class, 'addReceivable']);
             Route::post('loadout', [\App\Http\Controllers\API\ProductController::class, 'postLoadout']);
             Route::get('loadouts', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutProducts']);
             Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVse']);
