@@ -56,6 +56,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);
 
+        Route::get("vse_loadout_info/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getLoadoutInfoByVse']);
         Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
 
         Route::apiResource("users", \App\Http\Controllers\API\UserController::class);
@@ -64,9 +65,10 @@ Route::group(["prefix" => "v1"], function () {
             Route::post("take-stock", [\App\Http\Controllers\API\ProductController::class, 'takeStock']);
             Route::get("get-stock", [\App\Http\Controllers\API\ProductController::class, 'getStock']);
             Route::post("receivable", [\App\Http\Controllers\API\ProductController::class, 'addReceivable']);
+            Route::post("returns-from-vse", [\App\Http\Controllers\API\ProductController::class, 'returnsFromVse']);
             Route::post('loadout', [\App\Http\Controllers\API\ProductController::class, 'postLoadout']);
             Route::get('loadouts', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutProducts']);
-            Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVse']);
+            Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVses']);
             Route::get('pending-orders', [\App\Http\Controllers\API\ProductController::class, 'getPendingOrders']);
             Route::post('approve-order/{inventoryOrder}', [\App\Http\Controllers\API\ProductController::class, 'approveOrder']);
         });

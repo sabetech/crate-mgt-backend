@@ -126,6 +126,21 @@ class CustomerController extends Controller
         ]);
     }
 
+    public function getLoadoutInfoByVse($id, Request $request) {
+        $date = $request->get('date');
+
+        $VSE = Customer::where('id', $id)->with(['vseLoadout' => 
+            function ($query) use ($date) {
+                $query->where('date', $date)
+                    ->with(['product']);
+            }])->first();
+
+        return response()->json([
+            "success" => true,
+            "data" => $VSE
+        ]);
+    }
+
     public function postRecordVseSales(Request $request, string $id) {
         $customer = Customer::find($id);
         

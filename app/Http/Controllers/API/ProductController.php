@@ -163,7 +163,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function getLoadoutByVse(Request $request) {
+    public function getLoadoutByVses(Request $request) {
         $date = $request->get('date');
 
         $VSEs = Customer::where('customer_type', 'retailer-vse')->with(['vseLoadout' => 
@@ -251,4 +251,35 @@ class ProductController extends Controller
             "data" => "Inventory Receivable saved successfully"
         ]);
     }
+
+    public function returnsFromVse(Request $request) {
+        $date = $request->get('date');
+        $products = $request->get('products');
+        $vse = $request->get('vse');
+        $user = Auth::user();
+
+        $products = json_decode($products, true);
+
+        foreach ($products as $product) {
+            //update inventory balance
+            $loadoutProduct = LoadoutProduct::where('date', $date)
+                ->where('customer_id', $vse)
+                ->where('product_id', $product['product'])
+                ->first();
+
+            if ($loadoutProduct) {
+                $loadoutProduct->returned = $product['quantity'];
+                $loadoutProduct->quantity_sold = $loadoutProduct->quantity - $loadoutProduct->returned;
+                $loadoutProduct->vse_outstandingbalance = $loadoutProduct->quantity - ($loadoutProduct->returned + $loadoutProduct->quantity_sold);
+                $loadoutProduct->save();
+            }
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Returns from VSE saved successfully"
+        ]);
+
+    }
+
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CustomerEmptiesAccount;
+use App\Models\LoadoutProduct;
 
 class Customer extends Model
 {
@@ -15,6 +17,6 @@ class Customer extends Model
     }
 
     public function vseLoadout() {
-        return $this->hasMany(Loadout::class);
+        return $this->hasMany(LoadoutProduct::class);
     }
 }
