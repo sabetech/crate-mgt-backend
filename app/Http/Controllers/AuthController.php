@@ -54,7 +54,9 @@ class AuthController extends Controller
         ]);
 
         //check emaail .. 
-        $user = User::where('email', $fields['email'])->first();
+        $user = User::with(['roles' => function($query) {
+            $query->with('permissions');
+        }])->where('email', $fields['email'])->first();
         
         //check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
@@ -64,6 +66,7 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('opktoken')->plainTextToken;
+
         $user->role = $user->roles->pluck('name')[0];
         $response = [
             'user'=> $user,

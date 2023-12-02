@@ -32,17 +32,50 @@ class SetupRolesForUsers extends Command
             'admin',
             'empties_manager',
             'operations_manager',
-            'clerk',
+            'auditor',
+            'sales_manager',
+            'cashier',
+            'warehouse_manager',
         ];
 
         $permissions = [
-            'view',
-            'edit',
-            'create',
-            'delete',
+            'view_dashboard',
+            'create_customer',
+            'view_customer',
+            'list_customers',
+            'return_empties',
+            'record_vse_sale',
+            'empties_sales_in',
+            'empties_returned',
+            'empties_on_ground',
+            'inventory',
+            'initial_sale',
+            'list_sales',
+            'approve_sale',
             'approve',
             'user_management',
-        ]; //let do this for now ... I can research more on this later
+        ];
+
+        $permissionsForEmptiesManager = [
+            $permissions[0], 
+            $permissions[2],
+            $permissions[3],
+            $permissions[4],
+            $permissions[5],
+            $permissions[6],
+            $permissions[7],
+            $permissions[8],
+        ];
+
+        $permissionsForSalesManager = [
+            $permissions[10],
+            $permissions[11],
+        ];
+
+        $permissionsForCashier = [
+            $permissions[11],
+            $permissions[12],
+        ];
 
         foreach ($roles as $role) {
             $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => $role]);
@@ -55,16 +88,31 @@ class SetupRolesForUsers extends Command
         }
 
         $this->info('Assigning permissions to roles...');
-        //assign permissions to roles
+    
         $role = \Spatie\Permission\Models\Role::findByName('admin');
-        $role->givePermissionTo('view');
-        $role->givePermissionTo('edit');
-        $role->givePermissionTo('create');
-        $role->givePermissionTo('delete');
-        $role->givePermissionTo('approve');
-        $role->givePermissionTo('user_management');
-        $this->info('Permissions assigned to admin role');
+        foreach($permissions as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
+        $role = \Spatie\Permission\Models\Role::findByName('empties_manager');
+        foreach($permissionsForEmptiesManager as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
+        $role = \Spatie\Permission\Models\Role::findByName('sales_manager');
+        foreach($permissionsForSalesManager as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
+        $role = \Spatie\Permission\Models\Role::findByName('cashier');
+        foreach($permissionsForCashier as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
         
 
+
+        $this->info('Permissions assigned to admin role');
+        
     }
 }

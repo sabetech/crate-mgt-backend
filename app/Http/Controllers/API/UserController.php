@@ -14,9 +14,11 @@ class UserController extends Controller
     public function index()
     {
         //Get all users
-        $users = User::with('roles')->get();
+        $users = User::with(['roles' => function($query) {
+            $query->with('permissions');
+        }])->get();
         foreach ($users as $user) {
-            $user->role = $user->roles->pluck('name');
+            $user->role = $user->roles->pluck('name')->first();
         }
 
         return response()->json([
@@ -58,7 +60,10 @@ class UserController extends Controller
     public function show(string $id)
     {
         //
-        $user = User::with('roles')->find($id);
+        $user = User::with(['roles' => function($query) {
+            $query->with('permissions');
+        }])->find($id);
+
         if ($user) {
             return response()->json([
                 "success" => true,
@@ -118,6 +123,14 @@ class UserController extends Controller
         return response()->json([
             "success" => true,
             "message" => "User has been deleted!"
+        ]);
+    }
+
+    public function getRoles() {
+        $roles = \Spatie\Permission\Models\Role::all();
+        return response()->json([
+            "success" => true,
+            "data" => $roles
         ]);
     }
 }

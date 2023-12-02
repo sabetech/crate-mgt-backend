@@ -60,6 +60,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
 
         Route::apiResource("users", \App\Http\Controllers\API\UserController::class);
+        Route::get("roles", [\App\Http\Controllers\API\UserController::class, 'getRoles']);
 
         Route::group(["prefix" => "stocks"], function () {
             Route::post("take-stock", [\App\Http\Controllers\API\ProductController::class, 'takeStock']);
