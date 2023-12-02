@@ -99,6 +99,11 @@ class SetupRolesForUsers extends Command
             $role->givePermissionTo($permission);
         }
 
+        $role = \Spatie\Permission\Models\Role::findByName('operations_manager');
+        foreach($permissionsForEmptiesManager as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
         $role = \Spatie\Permission\Models\Role::findByName('sales_manager');
         foreach($permissionsForSalesManager as $permission) {
             $role->givePermissionTo($permission);
@@ -109,7 +114,8 @@ class SetupRolesForUsers extends Command
             $role->givePermissionTo($permission);
         }
 
-        
+        $role = \Spatie\Permission\Models\Role::findByName('warehouse_manager');
+        $role->givePermissionTo('inventory');
 
 
         $this->info('Permissions assigned to admin role');
