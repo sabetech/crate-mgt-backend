@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("phone");
-            $table->enum("customer_type", ["retailer", "wholesaler"])->default("retailer");
+            $table->enum("customer_type", ["retailer", "wholesaler", "retailer-vse"])->default("retailer");
             $table->timestamps();
             $table->softDeletes();
         });
