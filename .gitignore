@@ -18,7 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 /data-backup/*
-/app/Console/Commands/products.csv
+# /app/Console/Commands/products.csv
 .DS_Store
 ```
 
