@@ -34,26 +34,31 @@ class SetupRolesForUsers extends Command
             'operations_manager',
             'auditor',
             'sales_manager',
+            'sales_admin',
             'cashier',
             'warehouse_manager',
         ];
 
         $permissions = [
-            'view_dashboard',
-            'create_customer',
-            'view_customer',
-            'list_customers',
-            'return_empties',
-            'record_vse_sale',
-            'empties_sales_in',
-            'empties_returned',
-            'empties_on_ground',
-            'inventory',
-            'initial_sale',
-            'list_sales',
-            'approve_sale',
-            'approve',
-            'user_management',
+            0 => 'view_dashboard',
+            1 => 'create_customer',
+            2 => 'view_customer',
+            3 => 'list_customers',
+            4 => 'return_empties',
+            5 => 'record_vse_sale',
+            6 => 'empties_sales_in',
+            7 => 'empties_returned',
+            8 => 'empties_on_ground',
+            9 => 'inventory',
+            10 => 'initial_sale',
+            11 => 'list_sales',
+            12 => 'modify_prices',
+            13 => 'approve_sale',
+            14 => 'approve',
+            15 => 'user_management',
+            16 => 'return_sales',
+            17 => 'record_sales',
+            18 => 'reports',
         ];
 
         $permissionsForEmptiesManager = [
@@ -72,9 +77,40 @@ class SetupRolesForUsers extends Command
             $permissions[11],
         ];
 
+        $permissionsForSalesAdmin = [
+            $permissions[10],
+            $permissions[11],
+            $permissions[16],
+            $permissions[17],
+        ];
+
         $permissionsForCashier = [
             $permissions[11],
+            $permissions[13],
+        ];
+
+        $permissionsForWarehouseManager = [
+            $permissions[9],
+        ];
+
+        $permissionsForAuditor = [
+            $permissions[18],
+        ];
+
+        $permissionsForOperationsManager = [
+            $permissions[0],
+            $permissions[1],
+            $permissions[4],
+            $permissions[5],
+            $permissions[6],
+            $permissions[7],
+            $permissions[8],
+            $permissions[9],
             $permissions[12],
+            $permissions[13],
+            $permissions[14],
+            $permissions[15],
+            $permissions[16],
         ];
 
         foreach ($roles as $role) {
