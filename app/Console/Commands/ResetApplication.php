@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use function Laravel\Prompts\confirm;
+use App\Models\User;
 
 
 class ResetApplication extends Command
