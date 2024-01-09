@@ -145,6 +145,11 @@ class SetupRolesForUsers extends Command
             $role->givePermissionTo($permission);
         }
 
+        $role = \Spatie\Permission\Models\Role::findByName('sales admin');
+        foreach($permissionsForSalesAdmin as $permission) {
+            $role->givePermissionTo($permission);
+        }
+
         $role = \Spatie\Permission\Models\Role::findByName('cashier');
         foreach($permissionsForCashier as $permission) {
             $role->givePermissionTo($permission);
