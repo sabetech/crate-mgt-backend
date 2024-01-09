@@ -30,13 +30,13 @@ class SetupRolesForUsers extends Command
         //check if roles and permissions exist
         $roles = [
             'admin',
-            'empties_manager',
-            'operations_manager',
+            'empties manager',
+            'operations manager',
             'auditor',
-            'sales_manager',
-            'sales_admin',
+            'sales manager',
+            'sales admin',
             'cashier',
-            'warehouse_manager',
+            'warehouse manager',
         ];
 
         $permissions = [
@@ -130,17 +130,17 @@ class SetupRolesForUsers extends Command
             $role->givePermissionTo($permission);
         }
 
-        $role = \Spatie\Permission\Models\Role::findByName('empties_manager');
+        $role = \Spatie\Permission\Models\Role::findByName('empties manager');
         foreach($permissionsForEmptiesManager as $permission) {
             $role->givePermissionTo($permission);
         }
 
-        $role = \Spatie\Permission\Models\Role::findByName('operations_manager');
+        $role = \Spatie\Permission\Models\Role::findByName('operations manager');
         foreach($permissionsForEmptiesManager as $permission) {
             $role->givePermissionTo($permission);
         }
 
-        $role = \Spatie\Permission\Models\Role::findByName('sales_manager');
+        $role = \Spatie\Permission\Models\Role::findByName('sales manager');
         foreach($permissionsForSalesManager as $permission) {
             $role->givePermissionTo($permission);
         }
@@ -150,7 +150,7 @@ class SetupRolesForUsers extends Command
             $role->givePermissionTo($permission);
         }
 
-        $role = \Spatie\Permission\Models\Role::findByName('warehouse_manager');
+        $role = \Spatie\Permission\Models\Role::findByName('warehouse manager');
         $role->givePermissionTo('inventory');
 
         $this->info('Permissions assigned to admin role');
