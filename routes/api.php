@@ -48,8 +48,12 @@ Route::group(["prefix" => "v1"], function () {
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
         Route::get("products-all", [\App\Http\Controllers\API\ProductController::class, 'getAllProducts']);
 
+        
+
         Route::group(["prefix" => "products"], function () {
             Route::get('balance', [\App\Http\Controllers\API\ProductController::class, 'getProductStockBalance']);
+            Route::put('/edit/{id}', [\App\Http\Controllers\API\ProductController::class, 'modifyProduct']);
+            Route::post('/new/{id}', [\App\Http\Controllers\API\ProductController::class, 'modifyProduct']);
         });
 
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);

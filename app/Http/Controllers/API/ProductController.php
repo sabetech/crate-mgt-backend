@@ -282,4 +282,24 @@ class ProductController extends Controller
 
     }
 
+    public function modifyProduct(Request $request, $id) {
+        $product = Product::find($id);
+
+        if (!$product) return response()->json([
+            "success" => false,
+            "data" => "Product not found"
+        ]);
+
+        $product->sku_name = $request->get('sku_name');
+        $product->sku_code = $request->get('sku_code');
+        $product->retail_price = $request->get('retail_price');
+        $product->wholesale_price = $request->get('wholesale_price');
+        $product->save();
+
+        return response()->json([
+            "success" => true,
+            "data" => "Product updated successfully"
+        ]);
+    }
+
 }

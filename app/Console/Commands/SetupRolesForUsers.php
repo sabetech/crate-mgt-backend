@@ -153,7 +153,6 @@ class SetupRolesForUsers extends Command
         $role = \Spatie\Permission\Models\Role::findByName('warehouse_manager');
         $role->givePermissionTo('inventory');
 
-
         $this->info('Permissions assigned to admin role');
         
     }
