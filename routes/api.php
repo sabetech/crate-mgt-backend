@@ -36,6 +36,10 @@ Route::group(["prefix" => "v1"], function () {
     });
 
     Route::group(["middleware" => "auth:sanctum"], function () {
+        
+        Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+
+
         Route::apiResource("empties-receiving-logs", \App\Http\Controllers\API\EmptiesLogController::class);
         Route::get("empties-returned-logs", [\App\Http\Controllers\API\EmptiesLogController::class, 'getEmptiesReturned']);
         Route::post("empties-returned-logs", [\App\Http\Controllers\API\EmptiesLogController::class, 'postEmptiesReturned']);
@@ -83,6 +87,5 @@ Route::group(["prefix" => "v1"], function () {
             Route::get("/", [\App\Http\Controllers\API\SalesController::class, 'sales']);
         });
 
-        Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
     });
 });

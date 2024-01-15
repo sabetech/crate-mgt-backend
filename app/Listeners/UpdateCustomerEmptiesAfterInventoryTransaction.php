@@ -35,8 +35,10 @@ class UpdateCustomerEmptiesAfterInventoryTransaction
 
     public function updateCustomerEmptiesAccount($inventoryOrder, $sale) {
         
+        Log::info($sale->product);
+        
+        if (!$sale->product->empty_returnable) return;
         Log::info("Update Customer Empties Account");
-        if (!$sale->product->is_returnable) return;
         CustomerEmptiesAccount::create([
             'date' => now(),
             'customer_id' => $inventoryOrder->order->customer->id,
