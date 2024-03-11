@@ -32,7 +32,7 @@ class UpdateCustomerEmptiesAfterInventoryTransaction
             $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);
         });
     }
-
+ 
     public function updateCustomerEmptiesAccount($inventoryOrder, $sale) {
         
         Log::info($sale->product);

@@ -36,7 +36,7 @@ Route::group(["prefix" => "v1"], function () {
     });
 
     Route::group(["middleware" => "auth:sanctum"], function () {
-        
+
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
 
@@ -52,7 +52,9 @@ Route::group(["prefix" => "v1"], function () {
         Route::apiResource("products_returnable", \App\Http\Controllers\API\ProductController::class);
         Route::get("products-all", [\App\Http\Controllers\API\ProductController::class, 'getAllProducts']);
 
-        
+        Route::group(["prefix" => "empties"], function () {
+            Route::get('/balance', [\App\Http\Controllers\API\EmptiesController::class , 'getEmptiesBalances']);
+        });
 
         Route::group(["prefix" => "products"], function () {
             Route::get('balance', [\App\Http\Controllers\API\ProductController::class, 'getProductStockBalance']);
@@ -85,6 +87,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::group(["prefix" => "sales"], function () {
             Route::post("pay", [\App\Http\Controllers\API\SalesController::class, 'pay']);
             Route::get("/", [\App\Http\Controllers\API\SalesController::class, 'sales']);
+            Route::get("/daily-report", [\App\Http\Controllers\API\SalesController::class, 'salesReport']);
         });
 
     });

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Customer;
 use App\Models\Sale;
 use App\Events\SalesOrderCreated;
+use App\Reports\DailySalesReport;
 use Auth;
 
 class SalesController extends Controller
@@ -58,16 +59,16 @@ class SalesController extends Controller
         $order = new Order;
         $saleItems = $request->get('saleItems');
         $paymentType = $request->get('paymentType');
-        
+
         $totalAmount = $request->get('total');
         $order->amount_tendered = $amountTendered; //this is initially 0 since payment has not been made!
         $order->date = $date;
         $order->customer_id = $customerId;
         $order->total_amount = $totalAmount;
         $order->payment_type = $paymentType;
-        
+
         $order->user_id = $user_id;
-        
+
         $saleItems = json_decode($saleItems, false);
 
         if ($customer->customer_type == 'wholesaler'){
@@ -75,7 +76,7 @@ class SalesController extends Controller
         }else{
             $order->transaction_id = "OPK-RET-".time()."-".$customer->id;
         }
-        
+
         $order->save();
 
         Log::info($saleItems);
@@ -101,4 +102,22 @@ class SalesController extends Controller
             "data" => $order
         ]);
     }
+
+    public function salesReport(Request $request){
+
+        $from = $request->get('from');
+        $to = $request->get('to');
+
+        $customerOption = $request->get('customerOption');
+        $dailySalesReport = new DailySalesReport($from, $to, $customerOption);
+
+        $salesBuilder = $dailySalesReport->generate();
+        $aggregatedSales = $dailySalesReport->aggregateSalesByDateAndProduct($salesBuilder)->get();
+
+        return response()->json([
+            "success" => true,
+            "data" => $aggregatedSales
+        ]);
+    }
+
 }

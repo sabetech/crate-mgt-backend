@@ -9,6 +9,8 @@ use App\Models\EmptiesReturningLogs;
 use App\Models\EmptiesReturningLogsProduct;
 use App\Models\EmptiesOnGroundProduct;
 use App\Models\EmptiesOnGroundLog;
+use App\Events\EmptiesOnGroundSaved;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -41,7 +43,7 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesReturned(Request $request) {
-        
+
         $emptiesReturnedLogs = new EmptiesReturningLogs();
         $emptiesReturnedLogs->date = $request->get('date');
         $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
@@ -51,7 +53,7 @@ class EmptiesLogController extends Controller
 
         if ($emptiesReturnedLogs->save()) {
             $attributes = json_decode($request->get('products'));
-            
+
             foreach($attributes as $attrib) {
                 $emptiesReturningProductLogs = new EmptiesReturningLogsProduct();
                 $emptiesReturningProductLogs->product_id = $attrib->product_id;
@@ -76,7 +78,7 @@ class EmptiesLogController extends Controller
 
     public function reduceEmptiesOnGround($product_id, $quantity) {
         //Reduce the empties on ground
-        
+
 
     }
 
@@ -91,9 +93,9 @@ class EmptiesLogController extends Controller
         $uploadedFileUrl = Cloudinary::upload($request->file('image_ref')->getRealPath(), [
             'folder' => 'Crate-Empties-Mgt'
         ])->getSecurePath();
-        
+
         // Access the uploaded image URL
-        
+
         $emptiesLog = new EmptiesReceivingLog();
         $emptiesLog->date = $request->get('date');
         $emptiesLog->vehicle_number = $request->get('vehicle_number');
@@ -103,7 +105,7 @@ class EmptiesLogController extends Controller
         $emptiesLog->delivered_by = $request->get('delievered_by');
         $emptiesLog->quantity_received = $request->get('quantity');
         $emptiesLog->image_reference = $uploadedFileUrl;
-        
+
         if ($emptiesLog->save()) {
             //save the sub product quantities
             $products = json_decode($request->get('product-quanties'));
@@ -115,7 +117,7 @@ class EmptiesLogController extends Controller
                 $emptiesLogProduct->save();
             }
         }
-        
+
         return response()->json([
             "success" => true,
             "data" => "Empty Log was saved successfully"
@@ -123,11 +125,11 @@ class EmptiesLogController extends Controller
     }
 
     public function getEmptiesOnGround(Request $request) {
-        
+
         $emptiesOnGround = EmptiesOnGroundLog::with(["emptiesOnGroundProducts" => function ($query) {
             $query->with("product");
         }])->get();
-        
+
         return response()->json([
             "success" => true,
             "data" => $emptiesOnGround
@@ -150,7 +152,7 @@ class EmptiesLogController extends Controller
         if ($emptiesOnGround->save()) {
 
             $attributes = json_decode($request->get('empties_on_ground_products'));
-            
+
             foreach ($attributes as $product) {
                 $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
                 $emptiesOnGroundProduct->product_id = $product->product_id;
@@ -159,6 +161,13 @@ class EmptiesLogController extends Controller
                 $emptiesOnGroundProduct->is_empty = $product->is_empty;
                 $emptiesOnGroundProduct->date = $date;
                 $emptiesOnGroundProduct->save();
+
+                $emptiesBalance = [];
+                $emptiesBalance['product_id'] = $product->product_id;
+                $emptiesBalance['quantity'] = $product->quantity;
+
+                EmptiesOnGroundSaved::dispatch($emptiesBalance);
+
             }
 
             return response()->json([
@@ -184,7 +193,7 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesLoan(Request $request) {
-        
+
     }
 
     public function getEmptiesLoan(Request $request) {
@@ -199,7 +208,7 @@ class EmptiesLogController extends Controller
         //
         Log:info($request->all());
         $result = EmptiesReceivingLog::where('id', $id)->update($request->all());
-        
+
         return response()->json([
             "success" => true,
             "data" => "Empty Log was updated successfully"
