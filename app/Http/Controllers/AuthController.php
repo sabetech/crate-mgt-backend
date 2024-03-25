@@ -34,7 +34,7 @@ class AuthController extends Controller
     }
 
     public function logout() {
-        
+
         $user = Auth::user();
         if (!$user) {
             return response()->json(['message' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
@@ -53,11 +53,11 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        //check emaail .. 
+        //check emaail ..
         $user = User::with(['roles' => function($query) {
             $query->with('permissions');
         }])->where('email', $fields['email'])->first();
-        
+
         //check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
             return response([

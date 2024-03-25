@@ -35,6 +35,14 @@ Route::group(["prefix" => "v1"], function () {
         ]);
     });
 
+    Route::get('/balance', function () {
+        //Read json file and parse into array
+        $file = File::get("../balance-response.json");
+        $array = json_decode($file, true);
+
+        return response()->json($array);
+    });
+
     Route::group(["middleware" => "auth:sanctum"], function () {
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);

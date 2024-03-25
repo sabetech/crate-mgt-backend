@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+
     ])->toArray(),
 
     /*
