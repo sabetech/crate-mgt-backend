@@ -112,11 +112,11 @@ class SalesController extends Controller
         $dailySalesReport = new DailySalesReport($from, $to, $customerOption);
 
         $salesBuilder = $dailySalesReport->generate();
-        $aggregatedSales = $dailySalesReport->aggregateSalesByDateAndProduct($salesBuilder)->get();
+        $sales = $salesBuilder->get();
 
         return response()->json([
             "success" => true,
-            "data" => $aggregatedSales
+            "data" => $sales
         ]);
     }
 

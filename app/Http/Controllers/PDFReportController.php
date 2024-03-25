@@ -19,11 +19,11 @@ class PDFReportController extends Controller
         $dailySalesReport = new DailySalesReport($from, $to, $customerOption);
 
         $salesBuilder = $dailySalesReport->generate();
-        $aggregatedSales = $dailySalesReport->aggregateSalesByDateAndProduct($salesBuilder)->get();
+        $sales = $salesBuilder->get();
 
         $data = [  // Data to be passed to the PDF view
-            'title' => 'Details of Goods Sold: ' . date("d/m/Y", strtotime($from)) .' - ' . date("d/m/Y", strtotime($to)),
-            'aggregatedSales' => $aggregatedSales
+            'title' => 'Details of Goods Sold: ' . date("d/m/Y", strtotime($from)) .' - ' . date("d/m/Y", strtotime($to)) . ' ('.$customerOption.')',
+            'sales' => $sales
         ];
 
         $pdf = PDF::loadView('pdf.sales-report', $data);

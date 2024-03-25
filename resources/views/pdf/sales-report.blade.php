@@ -5,7 +5,7 @@
         <style>
             /* Your PDF styling here */
             .main {
-                margin: 2em
+                margin: 1em
             },
             table {
                border-collapse: collapse; /* Ensures borders between cells */
@@ -37,6 +37,9 @@
             .qty_sold {
                 text-align: center
             }
+            .customer {
+                background-color: #ebeaea
+            }
 
         </style>
     </head>
@@ -45,58 +48,125 @@
             <h3 style="text-align: center">{{ $title }}</h3>
 
             <table >
-                <thead>
+                <thead class="table-header">
                     <th >
-                        Trans Date
+                        Transaction Date
                     </th>
                     <th >
                         Product Name
                     </th>
                     <th >
-                        Qty Sold
+                        Product Cost
                     </th>
                     <th>
-                        Retail Price
+                        Quantity
                     </th>
                     <th>
-                        Total Price
+                        Total
+                    </th>
+                    <th>
+                        Transaction ID
+                    </th>
+                    <th>
+                        Sale By
                     </th>
                 </thead>
                 <tbody>
-                    @foreach($aggregatedSales as $aggSale)
-                        <tr class="row">
-                            <td class="trans_date">
-                                {{ $aggSale->date }}
-                            </td>
-                            <td>
-                                {{ $aggSale->sku_name }}
-                            </td>
-                            <td class="qty_sold">
-                                {{ $aggSale->Qty_Sold }}
-                            </td>
-                            <td>
-                                {{ $aggSale->unit_price }}
-                            </td>
-                            <td>
-                                {{ $aggSale->total_sales }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>SUM: {{ array_sum( array_map(function($aggSale) {
-                            return $aggSale['Qty_Sold'];
-                        }, $aggregatedSales->toArray() ) ) }}</td><td></td>
-                        <td>SUM:
-                            {{ array_sum( array_map(function($aggSale) {
-                                return $aggSale['total_sales'];
-                            }, $aggregatedSales->toArray(),  )) }}
+                    <?php
+                        $currentCustomer = $sales[0]->customer_id;
+                        $transactionID = $sales[0]->transaction_id;
+                        $customerSum = 0;
+                        $customerTotalSale = 0;
+                        $customerAmountTendered = 0;
+                        $countPurchases = 0;
+                    ?>
+                    <tr class="customer">
+                        <td colspan="8">
+                            Customer: {{ $sales[0]->customer_name }}
                         </td>
-                </tr>
-            </tfoot>
+                    </tr>
+                    @foreach($sales as $key => $sale)
+                        @if ($sale->transaction_id != $transactionID)
+                            $customerAmountTendered += $sale->amount_tendered;
+                        @endif
+                        @if ($sale->customer_id != $currentCustomer)
+                            <?php $currentCustomer = $sale->customer_id ?>
+                            <tr class="table-header">
+                                {{-- Calculate the totals here --}}
+                                <td colspan="1"></td>
+                                <td >
+                                    {{-- Total Payment Made: {{ $customerAmountTendered }} --}}
+                                </td>
+                                <td >
+                                    Number of purchases: {{ $countPurchases }}
+                                </td>
+
+                                <td>
+                                    Qty
+                                    <strong>{{ $customerSum }}</strong>
+                                    <?php $customerSum = 0 ?>
+                                </td>
+                                <td >
+                                    <strong>{{ $customerTotalSale }}</strong>
+                                </td>
+                                <td colspan="2"  style="text-align: right;">
+                                </td>
+                            </tr>
+                            <tr class="customer">
+                                <td colspan="8">
+                                    Customer: {{ $sale->customer_name }}
+                                </td>
+                            </tr>
+                        @endif
+                       <tr>
+                            <td>
+                                {{ date('d/m/Y H:i:s', strtotime($sale->transaction_date))  }}
+                            </td>
+                            <td>
+                                <?php $countPurchases++; ?>
+                                {{$sale->sku_name  }}
+                            </td>
+                            <td>
+                                {{$sale->unit_price  }}
+                            </td>
+                            <td>
+                                <?php $customerSum += $sale->quantity; ?>
+                                {{$sale->quantity  }}
+                            </td>
+                            <td>
+                                {{ $sale->sub_total  }}
+                                <?php $customerTotalSale += $sale->sub_total; ?>
+                            </td>
+                            <td>
+                                {{ $sale->transaction_id }}
+                            </td>
+                            <td>
+                                {{ $sale->name }}
+                            </td>
+                       </tr>
+                    @endforeach
+                    <tr class="customer">
+                        {{-- Calculate the totals here --}}
+                        <td colspan="1"></td>
+                        <td >
+                            Total Payment Made: {{ $customerAmountTendered }}
+                        </td>
+                        <td >
+                            Number of purchases: {{ $countPurchases }}
+                        </td>
+
+                        <td>
+                            Qty
+                            <strong>{{ $customerSum }}</strong>
+                            <?php $customerSum = 0 ?>
+                        </td>
+                        <td >
+                            <strong>{{ $customerTotalSale }}</strong>
+                        </td>
+                        <td colspan="2"  style="text-align: right;">
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </body>
