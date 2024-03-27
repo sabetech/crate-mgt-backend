@@ -9,6 +9,7 @@ class EmptiesOnGroundLog extends Model
 {
     use HasFactory;
     protected $table = "empties_on_ground_log";
+    protected $guarded = ['id'];
 
     public function emptiesOnGroundProducts()
     {

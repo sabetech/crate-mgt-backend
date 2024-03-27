@@ -137,30 +137,36 @@ class EmptiesLogController extends Controller
     }
 
     public function postEmptiesOnGround(Request $request) {
-        Log::info($request->all());
-
         $date = $request->get('date');
         $pcs = $request->get('pcs_number');
         $quantity = $request->get('quantity');
         $products = $request->get('products');
 
-        $emptiesOnGround = new EmptiesOnGroundLog;
-        $emptiesOnGround->date = $date;
-        $emptiesOnGround->quantity = $quantity;
-        $emptiesOnGround->number_of_pcs = $pcs;
+        $emptiesOnGround = EmptiesOnGroundLog::updateOrCreate([
+            'date' => $date,
+        ],
+        [
+            'quantity' => $quantity,
+            'number_of_pcs' => $pcs
+        ]);
+        Log::info($emptiesOnGround);
 
-        if ($emptiesOnGround->save()) {
+        if ($emptiesOnGround) {
 
             $attributes = json_decode($request->get('empties_on_ground_products'));
 
             foreach ($attributes as $product) {
-                $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
-                $emptiesOnGroundProduct->product_id = $product->product_id;
-                $emptiesOnGroundProduct->quantity = $product->quantity;
-                $emptiesOnGroundProduct->empties_on_ground_log_id = $emptiesOnGround->id;
-                $emptiesOnGroundProduct->is_empty = $product->is_empty;
-                $emptiesOnGroundProduct->date = $date;
-                $emptiesOnGroundProduct->save();
+                // $emptiesOnGroundProduct = new EmptiesOnGroundProduct;
+                EmptiesOnGroundProduct::updateOrCreate([
+                    'product_id' => $product->product_id,
+                    'date' => $date
+                ],
+                [
+                    'quantity' => $product->quantity,
+                    'empties_on_ground_log_id' => $emptiesOnGround->id,
+                    'is_empty' => $product->is_empty,
+                    'number_of_pcs' => $emptiesOnGround->number_of_pcs
+                ]);
 
                 $emptiesBalance = [];
                 $emptiesBalance['product_id'] = $product->product_id;

@@ -10,10 +10,12 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\EmptiesOnGroundProduct;
+use Illuminate\Support\Facades\Log;
 
 class EmptiesOnGroundSaved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $emptiesBalance;
 
     /**
      * Create a new event instance.
@@ -21,6 +23,8 @@ class EmptiesOnGroundSaved
     public function __construct(Array $emptiesBalance)
     {
         //
+        Log::info($emptiesBalance);
+        $this->emptiesBalance = $emptiesBalance;
     }
 
     /**

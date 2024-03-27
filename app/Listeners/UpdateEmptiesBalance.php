@@ -26,7 +26,7 @@ class UpdateEmptiesBalance
         $emptiesEvent = $event->emptiesBalance;
 
         Log::info($emptiesEvent);
-
+        Log::info("ARE YOU SAVING RIGHT NIOW");
         EmptiesBalance::updateOrCreate([
             'product_id' => $emptiesEvent['product_id']
         ],

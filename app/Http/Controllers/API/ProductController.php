@@ -108,7 +108,7 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $countedProdutsArray[$product['product']] = $product['quantity'];
         }
-        
+
         $breakagesQtyArray = [];
         if ($breakages == null) {
             $breakages = [];
@@ -118,10 +118,10 @@ class ProductController extends Controller
         }
 
         foreach($allProducts as $opkProducts) {
-            
+
             if (array_key_exists($opkProducts->id, $countedProdutsArray) ||
                 array_key_exists($opkProducts->id, $breakagesQtyArray)) {
-                
+
                 $stockItem = Stock::updateOrCreate(
                     [
                         'date' => $date,
@@ -166,7 +166,7 @@ class ProductController extends Controller
     public function getLoadoutByVses(Request $request) {
         $date = $request->get('date');
 
-        $VSEs = Customer::where('customer_type', 'retailer-vse')->with(['vseLoadout' => 
+        $VSEs = Customer::where('customer_type', 'retailer-vse')->with(['vseLoadout' =>
             function ($query) use ($date) {
                 $query->where('date', $date)
                     ->with(['product']);
@@ -216,10 +216,10 @@ class ProductController extends Controller
     }
 
     public function approveOrder(InventoryOrder $inventoryOrder, Request $request) {
-       
+
         $inventoryOrder->status = 'approved';
         $inventoryOrder->save();
-        
+
         InventoryOrderApproved::dispatch($inventoryOrder);
 
         return response()->json([
@@ -231,20 +231,30 @@ class ProductController extends Controller
     public function addReceivable(Request $request) {
         $date = $request->get('date');
         $products = $request->get('products');
+
+        if ($products === 'undefined') return response()->json([
+            "success" => false,
+            "message" => "No Products were selected. Select the products"
+        ], 400);
+
         $purchaseOrderId = $request->get('purchase_order_id');
         $user = Auth::user();
 
         $products = json_decode($products, true);
 
         foreach ($products as $product) {
-            $inventoryReceivable = new InventoryReceivable;
-            $inventoryReceivable->date = $date;
-            $inventoryReceivable->purchase_order_number = $purchaseOrderId;
-            $inventoryReceivable->product_id = $product['product'];
-            $inventoryReceivable->quantity = $product['quantity'];
-            $inventoryReceivable->user_id = $user->id;
-            $inventoryReceivable->save();
+            InventoryReceivable::updateOrCreate([
+                'date' => $date,
+                'purchase_order_number' => $purchaseOrderId,
+            ],
+            [
+                'product_id' => $product['product'],
+                'quantity' => $product['quantity'],
+                'user_id' => $user->id
+            ]);
         }
+
+        //This is when a bus comes in so after add ONLY the empties in the empties Received Info
 
         return response()->json([
             "success" => true,

@@ -149,9 +149,6 @@
                         {{-- Calculate the totals here --}}
                         <td colspan="1"></td>
                         <td >
-                            Total Payment Made: {{ $customerAmountTendered }}
-                        </td>
-                        <td >
                             Number of purchases: {{ $countPurchases }}
                         </td>
 

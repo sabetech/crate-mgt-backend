@@ -97,6 +97,5 @@ Route::group(["prefix" => "v1"], function () {
             Route::get("/", [\App\Http\Controllers\API\SalesController::class, 'sales']);
             Route::get("/daily-report", [\App\Http\Controllers\API\SalesController::class, 'salesReport']);
         });
-
     });
 });
