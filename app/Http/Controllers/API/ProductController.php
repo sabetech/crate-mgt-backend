@@ -14,6 +14,7 @@ use App\Models\InventoryOrder;
 use App\Models\InventoryReceivable;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
+use App\Events\InventoryReceivedFromGBL;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProductController extends Controller
