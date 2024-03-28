@@ -258,7 +258,7 @@ class ProductController extends Controller
             ],
             [
                 'quantity' => $product['quantity'],
-                'way_bill_image_url', $uploadedFileUrl,
+                'way_bill_image_url' => $uploadedFileUrl,
                 'user_id' => $user->id
             ]);
         }
