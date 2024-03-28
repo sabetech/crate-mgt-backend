@@ -248,6 +248,8 @@ class ProductController extends Controller
             'folder' => 'Crate-Empties-Mgt'
         ])->getSecurePath();
 
+        Log::info("UPLOADED FILE URL::", $uploadedFileUrl);
+
         foreach ($products as $product) {
             InventoryReceivable::updateOrCreate([
                 'date' => $date,
