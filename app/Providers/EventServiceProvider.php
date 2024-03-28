@@ -10,11 +10,13 @@ use App\Events\SalesOrderCreated;
 use App\Events\InventoryOrderApproved;
 use App\Events\InventoryTransactionCreated;
 use App\Events\StockTakenForProduct;
+use App\Events\InventoryReceivedFromGBL;
 use App\Listeners\UpdateInventoryPendingOrders;
 use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
 use App\Listeners\UpdateCustomerEmptiesAfterInventoryTransaction;
 use App\Listeners\UpdateProductBalanceAfterStockTaken;
 use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
+use App\Listeners\UpdateEmptiesLog;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -44,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         StockTakenForProduct::class => [
             UpdateProductBalanceAfterStockTaken::class,
         ],
+        InventoryReceivedFromGBL::class => [
+            UpdateEmptiesLog::class
+        ]
     ];
 
     /**
