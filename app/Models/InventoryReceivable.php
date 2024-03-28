@@ -18,28 +18,36 @@ class InventoryReceivable extends Model
             Log::info("Inventory Receivable created");
             Log::info($model);
 
-            //update inventory balance
-            $inventoryBalance = InventoryBalance::where('product_id', $model->product_id)->first();
-            if ($inventoryBalance == null) {
-                
-                $inventoryBalance = new InventoryBalance();
-                $inventoryBalance->product_id = $model->product_id;
-                $inventoryBalance->quantity = $model->quantity;
-                $inventoryBalance->save();
+            //update inventory balance and Empties database.
+            self::updateInventoryBalance($model);
 
-            } else {
+        });
 
-                $inventoryBalance->quantity += $model->quantity;
-                $inventoryBalance->save();
-
-            }
-            
-            
+        static::updated(function ($model) {
+            self::updateInventoryBalance($model);
         });
     }
 
 
     public function product() {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    static function updateInventoryBalance($model) {
+        //update inventory balance
+        $inventoryBalance = InventoryBalance::where('product_id', $model->product_id)->first();
+        if ($inventoryBalance == null) {
+
+            $inventoryBalance = new InventoryBalance();
+            $inventoryBalance->product_id = $model->product_id;
+            $inventoryBalance->quantity = $model->quantity;
+            $inventoryBalance->save();
+
+        } else {
+
+            $inventoryBalance->quantity += $model->quantity;
+            $inventoryBalance->save();
+
+        }
     }
 }

@@ -1,0 +1,15 @@
+- Things to be reviewed ...
+When a Truck comes, it only makes sense to update the inventory with what they have brought.
+As you update the Warehouse, Update the Empties (fulls) table as well
+
+Use that to update the Empties on the Ground
+
+At any point in time, when you come to the app, you should see ...
+Actual Empties (Empty Crates)
+Actual Fulls (Fulls)
+
+Empties That Belong to OPK
+Empties That Belong to Guiness Ghana
+
+Generate Reports For Empties - Need a sample!!
+

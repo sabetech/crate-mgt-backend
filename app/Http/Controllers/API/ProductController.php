@@ -14,6 +14,7 @@ use App\Models\InventoryOrder;
 use App\Models\InventoryReceivable;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class ProductController extends Controller
 {
@@ -241,20 +242,27 @@ class ProductController extends Controller
         $user = Auth::user();
 
         $products = json_decode($products, true);
+        Log::info($request->all());
+        // Upload an Image File to Cloudinary with One line of Code
+        $uploadedFileUrl = Cloudinary::upload($request->file('image_ref')->getRealPath(), [
+            'folder' => 'Crate-Empties-Mgt'
+        ])->getSecurePath();
 
         foreach ($products as $product) {
             InventoryReceivable::updateOrCreate([
                 'date' => $date,
                 'purchase_order_number' => $purchaseOrderId,
+                'product_id' => $product['product'],
             ],
             [
-                'product_id' => $product['product'],
                 'quantity' => $product['quantity'],
+                'way_bill_image_url', $uploadedFileUrl,
                 'user_id' => $user->id
             ]);
         }
 
-        //This is when a bus comes in so after add ONLY the empties in the empties Received Info
+        InventoryReceivedFromGBL::dispatch($request);
+
 
         return response()->json([
             "success" => true,
