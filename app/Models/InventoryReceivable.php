@@ -24,6 +24,7 @@ class InventoryReceivable extends Model
         });
 
         static::updated(function ($model) {
+            Log::info("Inventory Receivable Updated");
             self::updateInventoryBalance($model);
         });
     }

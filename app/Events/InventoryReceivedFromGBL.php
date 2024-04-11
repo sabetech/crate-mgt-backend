@@ -19,11 +19,11 @@ class InventoryReceivedFromGBL
     /**
      * Create a new event instance.
      */
-    public function __construct($request)
+    public function __construct($data)
     {
         //
-        Log::info("REQUEST DATA IN EVENT::: ", $request->all());
-        $this->data = $request;
+        Log::info("REQUEST DATA IN EVENT::: ", $data);
+        $this->data = $data;
     }
 
     /**

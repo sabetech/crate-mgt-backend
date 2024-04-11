@@ -151,23 +151,8 @@ class CustomerController extends Controller
             ]);
 
         $product_quantities = json_decode($request->get('product_quantities'));
-        $empties_returned = json_decode($request->get('empties_returned'));
 
         foreach ($product_quantities as $product) {
-
-            $customerEmptiesAccount = new CustomerEmptiesAccount;
-            $customerEmptiesAccount->customer_id = $customer->id;
-
-            $customerEmptiesAccount->product_id = $product->product;
-            $customerEmptiesAccount->quantity_transacted = $product->quantity;
-
-            $customerEmptiesAccount->transaction_type = 'out';
-
-            $customerEmptiesAccount->date = date("Y-m-d", strtotime($request->date));
-            $customerEmptiesAccount->save();
-        }
-
-        foreach ($empties_returned as $product) {
 
             $customerEmptiesAccount = new CustomerEmptiesAccount;
             $customerEmptiesAccount->customer_id = $customer->id;
@@ -180,6 +165,20 @@ class CustomerController extends Controller
             $customerEmptiesAccount->date = date("Y-m-d", strtotime($request->date));
             $customerEmptiesAccount->save();
         }
+
+        // foreach ($empties_returned as $product) {
+
+        //     $customerEmptiesAccount = new CustomerEmptiesAccount;
+        //     $customerEmptiesAccount->customer_id = $customer->id;
+
+        //     $customerEmptiesAccount->product_id = $product->product;
+        //     $customerEmptiesAccount->quantity_transacted = $product->quantity;
+
+        //     $customerEmptiesAccount->transaction_type = 'in';
+
+        //     $customerEmptiesAccount->date = date("Y-m-d", strtotime($request->date));
+        //     $customerEmptiesAccount->save();
+        // }
 
 
         return response()->json([

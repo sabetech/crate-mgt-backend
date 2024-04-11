@@ -12,6 +12,7 @@ use App\Models\LoadoutProduct;
 use App\Models\Customer;
 use App\Models\InventoryOrder;
 use App\Models\InventoryReceivable;
+use App\Models\InventoryBalance;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
 use App\Events\InventoryReceivedFromGBL;
@@ -188,14 +189,48 @@ class ProductController extends Controller
 
         $products = json_decode($products, true);
 
+        //[validate] check if that many products are actually there ...
+        $productValidationErrors = [];
+
         foreach ($products as $product) {
-            $loadout = new LoadoutProduct;
-            $loadout->date = $date;
-            $loadout->customer_id = $customer;
-            $loadout->product_id = $product['product'];
-            $loadout->quantity = $product['quantity'];
-            $loadout->user_id = $user->id;
-            $loadout->save();
+            $product_id = $product['product'];
+            $quantity = $product['quantity'];
+
+            $balance = InventoryBalance::where('product_id', $product_id)->first();
+
+            Log::info($balance);
+
+            if (!$balance || $balance->quantity < $quantity) {
+                Log::info("No or low Balance");
+                $productValidationErrors[] = [
+                    'product' => Product::find($product_id),
+                    'quantity' => $balance ? $balance->quantity : 0,
+                    'required' => $quantity
+                ];
+            }
+        }
+
+        if (count($productValidationErrors) > 0) {
+            return response()->json([
+                "success" => false,
+                "data" => $productValidationErrors,
+                "message" => "Not enough products in inventory"
+            ], 422);
+        }
+
+        foreach ($products as $product) {
+
+            LoadoutProduct::updateOrCreate(
+                [
+                    'date' => $date,
+                    'customer_id' => $customer,
+                    'product_id' => $product['product'],
+                ],
+                [
+                    'quantity' => $product['quantity'],
+                    'user_id' => $user->id
+                ]
+            );
         }
 
         return response()->json([
@@ -264,7 +299,10 @@ class ProductController extends Controller
             ]);
         }
 
-        InventoryReceivedFromGBL::dispatch($request);
+        $dataToDispatch = $request->all();
+        $dataToDispatch->imageUrl = $uploadedFileUrl;
+
+        InventoryReceivedFromGBL::dispatch($dataToSend);
 
 
         return response()->json([

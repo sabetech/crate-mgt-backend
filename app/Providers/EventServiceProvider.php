@@ -48,7 +48,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         InventoryReceivedFromGBL::class => [
             UpdateEmptiesLog::class
-        ]
+        ],
     ];
 
     /**
