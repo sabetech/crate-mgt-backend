@@ -24,7 +24,7 @@ class CustomerController extends Controller
             }else {
                 $customers = Customer::all();
             }
-            
+
             return response()->json([
                 "success"=> true,
                 "data" => $customers
@@ -37,13 +37,13 @@ class CustomerController extends Controller
             }else{
                 $customers = $customers->with('CustomerEmptiesAccount')->get();
             }
-            
+
             return response()->json([
                 "success"=>true,
                 "data" => $customers
             ]);
         }
-        
+
     }
 
     /**
@@ -107,7 +107,7 @@ class CustomerController extends Controller
 
         return response()->json([
             "success" => true,
-            "data" => "Empties Returned by this customer has been saved successfully" 
+            "data" => "Empties Returned by this customer has been saved successfully"
         ]);
 
     }
@@ -129,7 +129,7 @@ class CustomerController extends Controller
     public function getLoadoutInfoByVse($id, Request $request) {
         $date = $request->get('date');
 
-        $VSE = Customer::where('id', $id)->with(['vseLoadout' => 
+        $VSE = Customer::where('id', $id)->with(['vseLoadout' =>
             function ($query) use ($date) {
                 $query->where('date', $date)
                     ->with(['product']);
@@ -143,7 +143,13 @@ class CustomerController extends Controller
 
     public function postRecordVseSales(Request $request, string $id) {
         $customer = Customer::find($id);
-        
+
+        if (!$customer)
+            return response()->json([
+                "success" => false,
+                "data" => "Customer Does not exist!"
+            ]);
+
         $product_quantities = json_decode($request->get('product_quantities'));
         $empties_returned = json_decode($request->get('empties_returned'));
 
@@ -154,23 +160,23 @@ class CustomerController extends Controller
 
             $customerEmptiesAccount->product_id = $product->product;
             $customerEmptiesAccount->quantity_transacted = $product->quantity;
-            
+
             $customerEmptiesAccount->transaction_type = 'out';
-            
+
             $customerEmptiesAccount->date = date("Y-m-d", strtotime($request->date));
             $customerEmptiesAccount->save();
         }
 
         foreach ($empties_returned as $product) {
-            
+
             $customerEmptiesAccount = new CustomerEmptiesAccount;
             $customerEmptiesAccount->customer_id = $customer->id;
 
             $customerEmptiesAccount->product_id = $product->product;
             $customerEmptiesAccount->quantity_transacted = $product->quantity;
-            
+
             $customerEmptiesAccount->transaction_type = 'in';
-            
+
             $customerEmptiesAccount->date = date("Y-m-d", strtotime($request->date));
             $customerEmptiesAccount->save();
         }
