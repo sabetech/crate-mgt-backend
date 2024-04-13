@@ -40,9 +40,6 @@ class EventServiceProvider extends ServiceProvider
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
         ],
-        EmptiesOnGroundSaved::class => [
-            UpdateEmptiesBalance::class
-        ],
         StockTakenForProduct::class => [
             UpdateProductBalanceAfterStockTaken::class,
         ],
