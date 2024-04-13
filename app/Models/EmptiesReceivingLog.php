@@ -11,15 +11,7 @@ class EmptiesReceivingLog extends Model
     use HasFactory, SoftDeletes;
     protected $table = "empties_receiving_log";
 
-    protected $fillable = [
-        'date',
-        'quantity_received',
-        'vehicle_number',
-        'purchase_order_number',
-        'received_by',
-        'delivered_by',
-        'image_reference',
-    ];
+    protected $guarded = ['id'];
 
     public function products()
     {
