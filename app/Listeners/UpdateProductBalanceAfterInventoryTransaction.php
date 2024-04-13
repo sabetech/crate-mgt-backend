@@ -28,8 +28,11 @@ class UpdateProductBalanceAfterInventoryTransaction
         Log::info($inventoryTransaction);
         Log::info($inventoryTransaction->product);
         $product = $inventoryTransaction->product;
-        $product->inventoryBalance->quantity = $inventoryTransaction->balance;
-        $product->inventoryBalance->save();
 
+        InventoryBalance::updateOrCreate([
+            'product_id' => $product->id
+        ], [
+            'quantity' => $inventoryTransaction->balance,
+        ]);
     }
 }
