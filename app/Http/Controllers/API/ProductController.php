@@ -283,18 +283,20 @@ class ProductController extends Controller
         $image = $request->file('image_ref');
         $deployedEnv = config('deployment.environment');
 
+        $image_path = "";
+
         if ($deployedEnv == 'On_Prem') {
             // Generate a unique filename
-            $path = Storage::disk('local')->put('images', $image, time() . '.' . $image->getClientOriginalExtension());
+            $image_path = Storage::disk('local')->put('images', $image, time() . '.' . $image->getClientOriginalExtension());
         }else {
-            $uploadedFileUrl = Cloudinary::upload($image->getRealPath(), [
+            $image_path = Cloudinary::upload($image->getRealPath(), [
                 'folder' => 'Crate-Empties-Mgt'
             ])->getSecurePath();
         }
 
 
 
-        Log::info($uploadedFileUrl);
+        Log::info($image_path);
 
         foreach ($products as $product) {
             InventoryReceivable::updateOrCreate([
@@ -304,13 +306,13 @@ class ProductController extends Controller
             ],
             [
                 'quantity' => $product['quantity'],
-                'way_bill_image_url' => $uploadedFileUrl,
+                'way_bill_image_url' => $image_path,
                 'user_id' => $user->id
             ]);
         }
 
         $dataToDispatch = $request->all();
-        $dataToDispatch = [...$dataToDispatch, 'imageUrl' => $uploadedFileUrl];
+        $dataToDispatch = [...$dataToDispatch, 'imageUrl' => $image_path];
 
         InventoryReceivedFromGBL::dispatch($dataToDispatch);
 
