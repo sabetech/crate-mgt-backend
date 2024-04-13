@@ -19,7 +19,6 @@ class InventoryTransaction extends Model
             Log::info("InventoryTransaction created");
             Log::info($model);
 
-            //dispatch event here
             event(new InventoryTransactionCreated($model));
         });
     }

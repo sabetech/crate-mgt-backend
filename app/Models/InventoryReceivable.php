@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Constants\InventoryContants;
 
 class InventoryReceivable extends Model
 {
@@ -18,14 +20,15 @@ class InventoryReceivable extends Model
             Log::info("Inventory Receivable created");
             Log::info($model);
 
-            //update inventory balance and Empties database.
-            self::updateInventoryBalance($model);
+            //update inventory transaction and let inventory transaction update balances
+            self::saveInventoryTransaction($model);
 
         });
 
         static::updated(function ($model) {
             Log::info("Inventory Receivable Updated");
-            self::updateInventoryBalance($model);
+            self::saveInventoryTransaction($model);
+
         });
     }
 
@@ -34,21 +37,40 @@ class InventoryReceivable extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    static function updateInventoryBalance($model) {
-        //update inventory balance
-        $inventoryBalance = InventoryBalance::where('product_id', $model->product_id)->first();
-        if ($inventoryBalance == null) {
+    static function saveInventoryTransaction($model) {
+        //update inventory transaction ...
+        $user = Auth::user();
 
-            $inventoryBalance = new InventoryBalance();
-            $inventoryBalance->product_id = $model->product_id;
-            $inventoryBalance->quantity = $model->quantity;
-            $inventoryBalance->save();
+        $previousTransaction = InventoryTransaction::where('product_id', $model->product_id)
+                                ->order('updated_at', 'desc')->first();
 
-        } else {
-
-            $inventoryBalance->quantity += $model->quantity;
-            $inventoryBalance->save();
-
-        }
+        $inventoryTransaction = new InventoryTransaction;
+        $inventoryTransaction->product_id = $model->product_id;
+        $inventoryTransaction->activity = InventoryContants::PURCHASE_ORDER;
+        $inventoryTransaction->comment = "A truck came and gave stuff. Update with somethign sensible!";
+        $inventoryTransaction->quantity = $model->quantity;
+        $inventoryTransaction->balance = $previousTransaction->balance + ($model->quantity);
+        $inventoryTransaction->user_id = $user->id;
+        $inventoryTransaction->save();
     }
+
+
+    // DO NOT ENABLE THIS UNDER ANY CIRCUMSTANCE. I WAS IN MY RIGHT MIND WHEN I SAID THIS
+    // static function updateInventoryBalance($model) {
+    //     //update inventory balance
+    //     $inventoryBalance = InventoryBalance::where('product_id', $model->product_id)->first();
+    //     if ($inventoryBalance == null) {
+
+    //         $inventoryBalance = new InventoryBalance();
+    //         $inventoryBalance->product_id = $model->product_id;
+    //         $inventoryBalance->quantity = $model->quantity;
+    //         $inventoryBalance->save();
+
+    //     } else {
+
+    //         $inventoryBalance->quantity += $model->quantity;
+    //         $inventoryBalance->save();
+
+    //     }
+    // }
 }

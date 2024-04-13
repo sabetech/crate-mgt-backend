@@ -22,9 +22,9 @@ class UpdateEmptiesLog
     public function handle(object $event): void
     {
         //
-        $request = $event->data;
-        Log::info("CAN I do This!!!");
-        Log::info($request->all());
+        $data = $event->data;
+        Log::info("CAN I do This!!! EMPTIES LOG UPDATE HERE ...");
+        Log::info($data);
 
     }
 }
