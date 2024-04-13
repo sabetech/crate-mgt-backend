@@ -42,7 +42,7 @@ class InventoryReceivable extends Model
         $user = Auth::user();
 
         $previousTransaction = InventoryTransaction::where('product_id', $model->product_id)
-                                ->order('updated_at', 'desc')->first();
+                                ->orderBy('updated_at', 'desc')->first();
 
         $inventoryTransaction = new InventoryTransaction;
         $inventoryTransaction->product_id = $model->product_id;
