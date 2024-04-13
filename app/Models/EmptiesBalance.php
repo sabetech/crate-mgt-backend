@@ -10,6 +10,8 @@ class EmptiesBalance extends Model
     use HasFactory;
 
     protected $table = 'empties_balance';
+    protected $guarded = ['id'];
+
 
     public function product() {
         return $this->belongsTo('\App\Models\Product');
