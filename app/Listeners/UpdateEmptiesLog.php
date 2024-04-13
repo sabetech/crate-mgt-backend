@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use App\Models\EmptiesReceivingLog;
+use App\Models\EmptiesLogProduct;
 use App\Models\Product;
 
 class UpdateEmptiesLog
@@ -46,7 +47,7 @@ class UpdateEmptiesLog
 
         Log::info($emptiesProductData);
         Log::info("LETS Save empties recievign log");
-        Log::info($data['pallets_number']);
+        Log::info($data);
 
         $emptiesReceivingLog = EmptiesReceivingLog::updateOrCreate(
             [
@@ -55,7 +56,7 @@ class UpdateEmptiesLog
             ],
             [
                 'quantity_received' => $totalEmptiesQuantity,
-                'number_of_pallets' => intval($data['pallets_number']),
+                'number_of_pallets' => $data['pallets_number'],
                 'image_reference' => $data['imageUrl'],
                 'vehicle_number' => $data['vehicle_number'],
                 'delivered_by' => $data['delivered_by'],
