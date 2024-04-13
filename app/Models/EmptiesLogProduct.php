@@ -11,4 +11,6 @@ class EmptiesLogProduct extends Model
     use HasFactory;
     protected $table='empties_log_products';
 
+    protected $guarded = ['id'];
+
 }
