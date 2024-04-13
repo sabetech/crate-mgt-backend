@@ -7,6 +7,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
 use App\Models\EmptiesReceivingLog;
 use App\Models\EmptiesLogProduct;
+use App\Models\EmptiesOnGroundLog;
+use App\Models\EmptiesOnGroundProduct;
+use App\Models\EmptiesBalance;
 use App\Models\Product;
 
 class UpdateEmptiesLog
@@ -64,9 +67,6 @@ class UpdateEmptiesLog
             ]
         );
 
-        Log::info("LETS see what empties log is");
-        Log::info($emptiesReceivingLog);
-
         foreach ($emptiesProductData as $productId => $quantity) {
 
             EmptiesLogProduct::updateOrCreate([
@@ -78,5 +78,31 @@ class UpdateEmptiesLog
             ]);
         }
 
+        $emptiesOnGroundLog = new EmptiesOnGroundLog;
+        $emptiesOnGroundLog->date = $data['date'];
+        $emptiesOnGroundLog-> $totalEmptiesQuantity;
+        $emptiesOnGroundLog->save();
+
+        foreach ($emptiesProductData as $productId => $quantity) {
+            EmptiesOnGroundProduct::updateOrCreate([
+                'date' => $data['date'],
+                'empties_on_ground_log_id' => $emptiesOnGroundLog->id,
+                'product_id' => $productId,
+            ],
+            [
+                'quantity' => $quantity,
+            ]);
+
+            $emptiesBalance = EmptiesBalance::where('product_id', $productId)->first();
+            if ($emptiesBalance) {
+                $emptiesBalance->quantity += $quantity;
+                $emptiesBalance->save();
+            }else {
+                EmptiesBalance::create([
+                    'product_id' => $productId,
+                    'quantity' => $quantity
+                ]);
+            }
+        }
     }
 }
