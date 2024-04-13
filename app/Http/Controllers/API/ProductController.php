@@ -300,9 +300,9 @@ class ProductController extends Controller
         }
 
         $dataToDispatch = $request->all();
-        $dataToDispatch->imageUrl = $uploadedFileUrl;
+        $dataToDispatch = [...$dataToDispatch, 'imageUrl' => $uploadedFileUrl];
 
-        InventoryReceivedFromGBL::dispatch($dataToSend);
+        InventoryReceivedFromGBL::dispatch($dataToDispatch);
 
 
         return response()->json([
