@@ -20,5 +20,6 @@ yarn-error.log
 /data-backup/*
 # /app/Console/Commands/products.csv
 .DS_Store
+/public/images
 ```
 
