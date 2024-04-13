@@ -46,6 +46,7 @@ class UpdateEmptiesLog
 
         Log::info($emptiesProductData);
         Log::info("LETS Save empties recievign log");
+        Log::info($data['pallets_number']);
 
         $emptiesReceivingLog = EmptiesReceivingLog::updateOrCreate(
             [
@@ -54,7 +55,7 @@ class UpdateEmptiesLog
             ],
             [
                 'quantity_received' => $totalEmptiesQuantity,
-                'number_of_pallets' => $data['pallets_number'],
+                'number_of_pallets' => intval($data['pallets_number']),
                 'image_reference' => $data['imageUrl'],
                 'vehicle_number' => $data['vehicle_number'],
                 'delivered_by' => $data['delivered_by'],
