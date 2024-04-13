@@ -80,7 +80,7 @@ class UpdateEmptiesLog
 
         $emptiesOnGroundLog = new EmptiesOnGroundLog;
         $emptiesOnGroundLog->date = $data['date'];
-        $emptiesOnGroundLog-> $totalEmptiesQuantity;
+        $emptiesOnGroundLog->quantity = $totalEmptiesQuantity;
         $emptiesOnGroundLog->save();
 
         foreach ($emptiesProductData as $productId => $quantity) {
