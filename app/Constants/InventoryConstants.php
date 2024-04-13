@@ -2,7 +2,7 @@
 
 namespace App\Constants;
 
-class InventoryContants {
+class InventoryConstants {
     const SALE_REQUEST = 'sale_request';
     const LOAD_OUT = 'load_out';
     const LOAD_OUT_RETURN_IN = 'return_in';

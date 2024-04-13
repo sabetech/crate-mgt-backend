@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Constants\InventoryContants;
+use App\Constants\InventoryConstants;
 
 class InventoryReceivable extends Model
 {
