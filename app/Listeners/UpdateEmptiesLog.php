@@ -44,6 +44,9 @@ class UpdateEmptiesLog
 
         if ($totalEmptiesQuantity === 0) return;
 
+        Log::info($emptiesProductData);
+        Log::info("LETS Save empties recievign log");
+
         $emptiesReceivingLog = EmptiesReceivingLog::updateOrCreate(
             [
                 'date' => $data['date'],
