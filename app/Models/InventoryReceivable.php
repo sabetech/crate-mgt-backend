@@ -46,6 +46,7 @@ class InventoryReceivable extends Model
 
         $inventoryTransaction = new InventoryTransaction;
         $inventoryTransaction->product_id = $model->product_id;
+        $inventoryTransaction->date = date("Y-m-d H:i:s");
         $inventoryTransaction->activity = InventoryConstants::PURCHASE_ORDER;
         $inventoryTransaction->comment = "A truck came and gave stuff. Update with somethign sensible!";
         $inventoryTransaction->quantity = $model->quantity;
