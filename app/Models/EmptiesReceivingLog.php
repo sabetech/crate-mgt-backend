@@ -21,8 +21,12 @@ class EmptiesReceivingLog extends Model
         'image_reference',
     ];
 
+
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'empties_log_products', 'empties_log_id', 'product_id')->withPivot('quantity');
     }
+
+
 }
