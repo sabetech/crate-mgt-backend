@@ -33,12 +33,12 @@ class UpdateEmptiesLog
 
         $productsData = json_decode($data['products']);
 
-        foreach ($productsData as $product) {
-            $product = Product::find($product->product);
+        foreach ($productsData as $productFromClient) {
+            $product = Product::find($productFromClient->product);
 
             if ($product->empty_returnable) {
-                $emptiesProductData[$product->id] = $product->quantity;
-                $totalEmptiesQuantity += $product->quantity;
+                $emptiesProductData[$product->id] = $productFromClient->quantity;
+                $totalEmptiesQuantity += $productFromClient->quantity;
             }
         }
 
