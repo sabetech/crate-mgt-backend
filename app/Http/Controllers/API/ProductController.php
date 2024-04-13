@@ -279,10 +279,20 @@ class ProductController extends Controller
 
         $products = json_decode($products, true);
         Log::info($request->all());
-        // Upload an Image File to Cloudinary with One line of Code
-        $uploadedFileUrl = Cloudinary::upload($request->file('image_ref')->getRealPath(), [
-            'folder' => 'Crate-Empties-Mgt'
-        ])->getSecurePath();
+
+        $image = $request->file('image_ref');
+        $deployedEnv = config('deployment.environment');
+
+        if ($deployedEnv == 'On_Prem') {
+            // Generate a unique filename
+            $path = Storage::disk('local')->put('images', $image, time() . '.' . $image->getClientOriginalExtension());
+        }else {
+            $uploadedFileUrl = Cloudinary::upload($image->getRealPath(), [
+                'folder' => 'Crate-Empties-Mgt'
+            ])->getSecurePath();
+        }
+
+
 
         Log::info($uploadedFileUrl);
 
