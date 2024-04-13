@@ -287,8 +287,11 @@ class ProductController extends Controller
         $image_path = "";
 
         if ($deployedEnv == 'On_Prem') {
+            $imageName = time().'.'.$request->image->extension();
             // Generate a unique filename
-            $image_path = Storage::disk('local')->put('images', $image, time() . '.' . $image->getClientOriginalExtension());
+            // $image_path = Storage::disk('local')->put('images', $image, time() . '.' . $image->getClientOriginalExtension());
+            $image->move(public_path('images'), $imageName);
+            $image_path = "\/images\/" . $imageName;
         }else {
             $image_path = Cloudinary::upload($image->getRealPath(), [
                 'folder' => 'Crate-Empties-Mgt'
