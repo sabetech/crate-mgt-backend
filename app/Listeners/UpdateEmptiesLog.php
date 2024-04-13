@@ -29,7 +29,10 @@ class UpdateEmptiesLog
         //get update quantity based on whether these guys are actually empties ...
         $emptiesProductData = [];
         $totalEmptiesQuantity = 0;
-        foreach ($data['products'] as $product) {
+
+        $productsData = json_decode($data['products']);
+
+        foreach ($productsData as $product) {
             $product = Product::find($product->id);
 
             if ($product->empty_returnable) {
