@@ -47,6 +47,21 @@ class ProductController extends Controller
         ]);
     }
 
+    public function receivableLogs(Request $request) {
+        $date = $request->get('date');
+
+        if (!$date) {
+            $date = date("Y-m-d H:i:s");
+        }
+
+        $receivableLogs = InventoryReceivable::getReceivableLog($date);
+
+        return response()->json([
+            "success" => true,
+            "data" => $receivableLogs
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
