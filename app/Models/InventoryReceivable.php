@@ -76,7 +76,7 @@ class InventoryReceivable extends Model
     // }
 
     public static function getReceivableLog($date) {
-        $receivableLogs = self::where('date', $date)->get();
+        $receivableLogs = self::with('product')->where('date', $date)->get();
 
         return $receivableLogs;
     }

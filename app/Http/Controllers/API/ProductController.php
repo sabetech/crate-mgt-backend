@@ -51,7 +51,7 @@ class ProductController extends Controller
         $date = $request->get('date');
 
         if (!$date) {
-            $date = date("Y-m-d H:i:s");
+            $date = date("Y-m-d");
         }
 
         $receivableLogs = InventoryReceivable::getReceivableLog($date);
