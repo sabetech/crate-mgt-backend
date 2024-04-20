@@ -9,20 +9,24 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Constants\InventoryConstants;
+use App\Constants\EmptiesConstants;
+use Log;
 
-class InventoryOrderApproved
+class ReturnProductToGGBL
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $inventoryOrder;
-    public $action;
+    public $emptiesReturningProductLog, $action;
+
     /**
      * Create a new event instance.
      */
-    public function __construct($inventoryOrder)
+    public function __construct($emptiesReturningProductLog)
     {
-        $this->inventoryOrder = $inventoryOrder;
-        $this->action = InventoryConstants::SALE_REQUEST;
+        //
+        Log::info("DO you get here BL AB");
+        Log::info($emptiesReturningProductLog);
+        $this->emptiesReturningProductLog = $emptiesReturningProductLog;
+        $this->action = EmptiesConstants::RETURNING_EMPTIES_TO_GGBL;
     }
 
     /**

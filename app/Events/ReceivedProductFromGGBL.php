@@ -11,18 +11,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Constants\InventoryConstants;
 
-class InventoryOrderApproved
+class ReceivedProductFromGGBL
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $inventoryOrder;
-    public $action;
+    public $receivedProduct, $action;
+
     /**
      * Create a new event instance.
      */
-    public function __construct($inventoryOrder)
+    public function __construct($receivedProduct)
     {
-        $this->inventoryOrder = $inventoryOrder;
-        $this->action = InventoryConstants::SALE_REQUEST;
+        //
+        $this->receivedProduct = $receivedProduct;
+        $this->action = InventoryConstants::PURCHASE_ORDER;
     }
 
     /**

@@ -10,19 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Constants\InventoryConstants;
+use Log;
 
-class InventoryOrderApproved
+class LoadoutProductCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $inventoryOrder;
-    public $action;
+    public $loadoutProduct, $action;
     /**
      * Create a new event instance.
      */
-    public function __construct($inventoryOrder)
+    public function __construct($loadoutProduct)
     {
-        $this->inventoryOrder = $inventoryOrder;
-        $this->action = InventoryConstants::SALE_REQUEST;
+        //
+        Log::info("DO U actually reach here");
+        $this->loadoutProduct = $loadoutProduct;
+        $this->action = InventoryConstants::LOAD_OUT;
     }
 
     /**

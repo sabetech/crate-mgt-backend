@@ -10,6 +10,7 @@ use App\Models\EmptiesReturningLogsProduct;
 use App\Models\EmptiesOnGroundProduct;
 use App\Models\EmptiesOnGroundLog;
 use App\Events\EmptiesOnGroundSaved;
+use App\Events\ReturnProductToGGBL;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -44,42 +45,35 @@ class EmptiesLogController extends Controller
 
     public function postEmptiesReturned(Request $request) {
 
-        $emptiesReturnedLogs = new EmptiesReturningLogs();
-        $emptiesReturnedLogs->date = $request->get('date');
-        $emptiesReturnedLogs->vehicle_number = $request->get('vehicle_number');
-        $emptiesReturnedLogs->returned_by = $request->get('returned_by');
-        $emptiesReturnedLogs->number_of_pallets = $request->get('pallets_number');
-        $emptiesReturnedLogs->quantity = $request->get('quantity');
+        $emptiesReturnedLogs = EmptiesReturningLogs::updateOrCreate(
+            [
+                'date' => $request->get('date'),
+                'vehicle_number' => $request->get('vehicle_number'),
+            ],
+            [
+                'returned_by' => $request->get('returned_by'),
+                'number_of_pallets' => $request->get('pallets_number'),
+                'quantity' => $request->get('quantity')
+            ]);
 
-        if ($emptiesReturnedLogs->save()) {
+        if ($emptiesReturnedLogs) {
             $attributes = json_decode($request->get('products'));
 
             foreach($attributes as $attrib) {
-                $emptiesReturningProductLogs = new EmptiesReturningLogsProduct();
-                $emptiesReturningProductLogs->product_id = $attrib->product_id;
-                $emptiesReturningProductLogs->quantity = $attrib->quantity;
-                $emptiesReturningProductLogs->empties_returning_log_id = $emptiesReturnedLogs->id;
-                $emptiesReturningProductLogs->save();
-
-                //update the empties on ground
-                self::reduceEmptiesOnGround($attrib->product_id, $attrib->quantity);
-
+                EmptiesReturningLogsProduct::updateOrCreate([
+                    'empties_returning_log_id' => $emptiesReturnedLogs->id,
+                    'product_id' => $attrib->product_id
+                ],
+                [
+                    'quantity' => $attrib->quantity
+                ]);
             }
         }
-
-        //deduct the empties from the companies account
 
         return response()->json([
             "success" => true,
             "data" => "Empty Log was saved successfully"
         ]);
-
-    }
-
-    public function reduceEmptiesOnGround($product_id, $quantity) {
-        //Reduce the empties on ground
-
-
     }
 
     /**

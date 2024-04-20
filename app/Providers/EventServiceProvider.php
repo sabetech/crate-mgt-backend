@@ -11,12 +11,15 @@ use App\Events\InventoryOrderApproved;
 use App\Events\InventoryTransactionCreated;
 use App\Events\StockTakenForProduct;
 use App\Events\InventoryReceivedFromGBL;
+use App\Events\ReceivedProductFromGGBL;
+use App\Events\LoadoutProductCreated;
 use App\Listeners\UpdateInventoryPendingOrders;
-use App\Listeners\UpdateInventoryTransactionsAfterOrderApproval;
+use App\Listeners\UpdateInventoryTransactions;
 use App\Listeners\UpdateCustomerEmptiesAfterInventoryTransaction;
 use App\Listeners\UpdateProductBalanceAfterStockTaken;
 use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 use App\Listeners\UpdateEmptiesLog;
+use App\Listeners\UpdateEmptiesOnGround;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -34,7 +37,7 @@ class EventServiceProvider extends ServiceProvider
             UpdateInventoryPendingOrders::class,
         ],
         InventoryOrderApproved::class => [
-            UpdateInventoryTransactionsAfterOrderApproval::class,
+            UpdateInventoryTransactions::class,
             UpdateCustomerEmptiesAfterInventoryTransaction::class,
         ],
         InventoryTransactionCreated::class => [
@@ -42,6 +45,15 @@ class EventServiceProvider extends ServiceProvider
         ],
         StockTakenForProduct::class => [
             UpdateProductBalanceAfterStockTaken::class,
+        ],
+        ReturnProductToGGBL::class => [
+            UpdateEmptiesOnGround::class,
+        ],
+        ReceivedProductFromGGBL::class => [
+            UpdateInventoryTransactions::class,
+        ],
+        LoadoutProductCreated::class => [
+            UpdateInventoryTransactions::class,
         ],
         InventoryReceivedFromGBL::class => [
             UpdateEmptiesLog::class

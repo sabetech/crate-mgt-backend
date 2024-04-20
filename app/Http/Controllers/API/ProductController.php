@@ -12,6 +12,7 @@ use App\Models\LoadoutProduct;
 use App\Models\Customer;
 use App\Models\InventoryOrder;
 use App\Models\InventoryReceivable;
+use App\Models\InventoryTransaction;
 use App\Models\InventoryBalance;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
@@ -59,6 +60,20 @@ class ProductController extends Controller
         return response()->json([
             "success" => true,
             "data" => $receivableLogs
+        ]);
+    }
+
+    public function inventoryHistory(Request $request) {
+        $date = $request->get("date");
+
+        if (!$date) {
+            $date = date("Y-m-d");
+        }
+
+        $inventoryTransactions = InventoryTransaction::getInventoryByDate($date);
+        return response()->json([
+            "success" => true,
+            "data" => $inventoryTransactions
         ]);
     }
 
@@ -312,8 +327,6 @@ class ProductController extends Controller
                 'folder' => 'Crate-Empties-Mgt'
             ])->getSecurePath();
         }
-
-
 
         Log::info($image_path);
 
