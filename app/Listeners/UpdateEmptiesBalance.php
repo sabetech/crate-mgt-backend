@@ -4,8 +4,9 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Log;
-use App\Model\EmptiesBalance;
+use App\Models\EmptiesBalance;
+use App\Constants\EmptiesConstants;
+
 
 class UpdateEmptiesBalance
 {
@@ -22,16 +23,30 @@ class UpdateEmptiesBalance
      */
     public function handle(object $event): void
     {
-        //
-        $emptiesEvent = $event->emptiesBalance;
+        $model = $event->emptyTransaction;
 
-        Log::info($emptiesEvent);
-        Log::info("ARE YOU SAVING RIGHT NIOW");
+        //modify empties balances here ...
+        $existingBalance = EmptiesBalance::where('product_id', $model->product_id)->first();
+        $finalQuantity = 0;
+
+        if ($existingBalance) {
+            if ($model->transaction_type === 'in') {
+                $finalQuantity = $existingBalance->quantity + $model->quantity;
+            }else{
+                $finalQuantity = $existingBalance->quantity - $model->quantity;
+            }
+        }else {
+            $finalQuantity = $model->quantity;
+        }
+
+        if ($model->activity === EmptiesConstants::CUSTOMER_PURCHASE) {
+
+        }
+
         EmptiesBalance::updateOrCreate([
-            'product_id' => $emptiesEvent['product_id']
-        ],
-        [
-            'quantity' => $emptiesEvent['quantity']
+            'product_id' => $model->product_id
+        ],[
+            'quantity' => $finalQuantity
         ]);
     }
 }

@@ -9,25 +9,19 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Constants\EmptiesConstants;
-use Log;
 
-class ReturnProductToGGBL
+class EmptiesTransactionCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $emptiesReturningProductLog;
-    public $action;
+    public $emptyTransaction;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($emptiesReturningProductLog)
+    public function __construct($emptyTransaction)
     {
         //
-        Log::info("DO you get here RETURN PRODUCT TO GBL");
-        Log::info($emptiesReturningProductLog);
-        $this->emptiesReturningProductLog = $emptiesReturningProductLog;
-        $this->action = EmptiesConstants::RETURNING_EMPTIES_TO_GGBL;
+        $this->emptyTransaction = $emptyTransaction;
     }
 
     /**

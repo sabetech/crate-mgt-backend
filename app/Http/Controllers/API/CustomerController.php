@@ -100,6 +100,7 @@ class CustomerController extends Controller
             $newReturnEmpties->product_id = $product->product_id;
             $newReturnEmpties->quantity_transacted = $product->quantity;
             $newReturnEmpties->date = $request->date;
+            $newReturnEmpties->transaction_type = 'in';
 
             $newReturnEmpties->save();
 

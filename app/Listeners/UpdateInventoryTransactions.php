@@ -36,12 +36,7 @@ class UpdateInventoryTransactions
             case InventoryConstants::LOAD_OUT:
                 $this->updateInventoryTransactionAfterLoadout($event->loadoutProduct);
                 break;
-            case InventoryConstants::LOAD_OUT_RETURN_IN:
 
-                break;
-            case InventoryConstants::BREAKAGE: //decide whether or not to remove from main inventory
-
-                break;
             default: //other actions
 
                 break;

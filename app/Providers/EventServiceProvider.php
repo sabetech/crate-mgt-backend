@@ -13,13 +13,17 @@ use App\Events\StockTakenForProduct;
 use App\Events\InventoryReceivedFromGBL;
 use App\Events\ReceivedProductFromGGBL;
 use App\Events\LoadoutProductCreated;
+use App\Events\ReturnProductToGGBL;
+use App\Events\EmptiesTransactionCreated;
+use App\Events\CustomerReturnEmpties;
 use App\Listeners\UpdateInventoryPendingOrders;
 use App\Listeners\UpdateInventoryTransactions;
 use App\Listeners\UpdateCustomerEmptiesAfterInventoryTransaction;
 use App\Listeners\UpdateProductBalanceAfterStockTaken;
 use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 use App\Listeners\UpdateEmptiesLog;
-use App\Listeners\UpdateEmptiesOnGround;
+use App\Listeners\UpdateEmptiesTransaction;
+use App\Listeners\UpdateEmptiesBalance;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -38,7 +42,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         InventoryOrderApproved::class => [
             UpdateInventoryTransactions::class,
-            UpdateCustomerEmptiesAfterInventoryTransaction::class,
+            //UpdateCustomerEmptiesAfterInventoryTransaction::class,
+            UpdateEmptiesTransaction::class
         ],
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
@@ -47,7 +52,7 @@ class EventServiceProvider extends ServiceProvider
             UpdateProductBalanceAfterStockTaken::class,
         ],
         ReturnProductToGGBL::class => [
-            UpdateEmptiesOnGround::class,
+            UpdateEmptiesTransaction::class,
         ],
         ReceivedProductFromGGBL::class => [
             UpdateInventoryTransactions::class,
@@ -55,8 +60,14 @@ class EventServiceProvider extends ServiceProvider
         LoadoutProductCreated::class => [
             UpdateInventoryTransactions::class,
         ],
+        EmptiesTransactionCreated::class => [
+            UpdateEmptiesBalance::class,
+        ],
         InventoryReceivedFromGBL::class => [
             UpdateEmptiesLog::class
+        ],
+        CustomerReturnEmpties::class => [
+            UpdateEmptiesTransaction::class,
         ],
     ];
 

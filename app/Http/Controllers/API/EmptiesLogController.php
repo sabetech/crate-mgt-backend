@@ -54,7 +54,10 @@ class EmptiesLogController extends Controller
                 'returned_by' => $request->get('returned_by'),
                 'number_of_pallets' => $request->get('pallets_number'),
                 'quantity' => $request->get('quantity')
-            ]);
+            ]
+        );
+
+        Log::info($emptiesReturnedLogs);
 
         if ($emptiesReturnedLogs) {
             $attributes = json_decode($request->get('products'));

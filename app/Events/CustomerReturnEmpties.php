@@ -10,24 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use App\Constants\EmptiesConstants;
-use Log;
 
-class ReturnProductToGGBL
+class CustomerReturnEmpties
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $emptiesReturningProductLog;
+    public $customerEmptiesAccount;
     public $action;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($emptiesReturningProductLog)
+    public function __construct($customerEmptiesAccount)
     {
         //
-        Log::info("DO you get here RETURN PRODUCT TO GBL");
-        Log::info($emptiesReturningProductLog);
-        $this->emptiesReturningProductLog = $emptiesReturningProductLog;
-        $this->action = EmptiesConstants::RETURNING_EMPTIES_TO_GGBL;
+        $this->customerEmptiesAccount = $customerEmptiesAccount;
+        $this->action = EmptiesConstants::CUSTOMER_RETURN_EMPTIES;
     }
 
     /**
