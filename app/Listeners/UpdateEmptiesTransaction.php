@@ -23,8 +23,6 @@ class UpdateEmptiesTransaction
      */
     public function handle(object $event): void
     {
-        //
-        Log::info($emptiesReturningProductLog);
 
         switch($event->action) {
             case EmptiesConstants::RETURNING_EMPTIES_TO_GGBL:
@@ -33,6 +31,7 @@ class UpdateEmptiesTransaction
                 $this->updateEmptiesTransactionOnEmptiesReturned($emptiesReturningProductLog);
                 break;
             case EmptiesConstants::CUSTOMER_RETURN_EMPTIES:
+                // dd($event->customerEmptiesAccount);
                 $customerEmptiesAccount = $event->customerEmptiesAccount;
                 $this->updateEmptiesTransactionOnCustomerReturned($customerEmptiesAccount);
                 break;
@@ -65,7 +64,7 @@ class UpdateEmptiesTransaction
         $emptiesTransaction->transaction_id = "OPK-EMPT-".date("YmdHis");
         $emptiesTransaction->datetime = date("Y-m-d H:i:s");
         $emptiesTransaction->product_id = $model->product_id;
-        $emptiesTransaction->quantity = $model->quantity;
+        $emptiesTransaction->quantity = $model->quantity_transacted;
         $emptiesTransaction->transaction_type = 'in';
         $emptiesTransaction->activity = EmptiesConstants::CUSTOMER_RETURN_EMPTIES;
 
