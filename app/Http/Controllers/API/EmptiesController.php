@@ -21,7 +21,7 @@ class EmptiesController extends Controller
 
     public function getEmptiesTransactions(Request $request) {
 
-        $emptiesTransaction = EmptiesTransaction::with('product')->get();
+        $emptiesTransaction = EmptiesTransaction::with('product')->orderBy('datetime', 'desc')->get();
         return response()->json([
             'data' => $emptiesTransaction
         ], 200);
