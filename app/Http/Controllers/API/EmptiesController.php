@@ -17,4 +17,12 @@ class EmptiesController extends Controller
         ], 200);
 
     }
+
+    public function getEmptiesTransactions(Request $request) {
+
+        $emptiesTransaction = EmptiesTransaction::with('product')->get();
+        return response()->json([
+            'data' => $emptiesTransaction
+        ], 200);
+    }
 }
