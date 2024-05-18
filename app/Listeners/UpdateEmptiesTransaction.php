@@ -95,7 +95,7 @@ class UpdateEmptiesTransaction
 
     }
 
-    public function updateCustomerEmptiesAccount($inventoryOrder, $sale) {
+    public function updateCustomerEmptiesAccount($order, $sale) {
 
         Log::info($sale->product);
 
@@ -103,7 +103,7 @@ class UpdateEmptiesTransaction
         Log::info("Update Customer Empties Account");
         CustomerEmptiesAccount::create([
             'date' => now(),
-            'customer_id' => $inventoryOrder->order->customer->id,
+            'customer_id' => $order->customer->id,
             'product_id' => $sale->product_id,
             'quantity_transacted' => $sale->quantity,
             'transaction_type' => 'out',
