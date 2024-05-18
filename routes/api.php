@@ -63,6 +63,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::group(["prefix" => "empties"], function () {
             Route::get('/balance', [\App\Http\Controllers\API\EmptiesController::class , 'getEmptiesBalances']);
             Route::get('/transactions', [\App\Http\Controllers\API\EmptiesController::class, 'getEmptiesTransactions']);
+            Route::get('/empties-in-trade', [\App\Http\Controllers\API\EmptiesController::class, 'getEmptiesInTrade']);
         });
 
         Route::group(["prefix" => "products"], function () {
