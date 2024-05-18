@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\EmptiesConstants;
 use App\Constants\InventoryConstants;
 use App\Models\EmptiesTransaction;
+use App\Models\CustomerEmptiesAccount;
 
 class UpdateEmptiesTransaction
 {
