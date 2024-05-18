@@ -66,7 +66,7 @@ class UpdateEmptiesTransaction
         $emptiesTransaction->datetime = date("Y-m-d H:i:s");
         $emptiesTransaction->product_id = $model->product_id;
         $emptiesTransaction->quantity = $model->quantity_transacted;
-        $emptiesTransaction->transaction_type = 'in';
+        $emptiesTransaction->transaction_type = $model->transaction_type;
         $emptiesTransaction->activity = EmptiesConstants::CUSTOMER_RETURN_EMPTIES;
 
         $emptiesTransaction->save();
