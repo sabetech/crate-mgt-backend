@@ -88,8 +88,8 @@ class UpdateEmptiesTransaction
             $emptiesTransaction->save();
         }
 
-        $inventoryOrder->order->sales->each(function($sale) use ($inventoryOrder) {
-            $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);
+        $order->sales->each(function($sale) use ($order) {
+            $this->updateCustomerEmptiesAccount($order, $sale);
         });
 
     }
