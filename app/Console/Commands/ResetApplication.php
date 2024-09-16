@@ -30,7 +30,7 @@ class ResetApplication extends Command
     {
         //
         $confirmed = $this->confirm('Are you sure you want to reset the application? This will delete all data and cannot be undone. Type "yes" to continue.');
-        
+
         $this->info('Resetting the application...');
         $this->info('============================');
 
@@ -48,6 +48,14 @@ class ResetApplication extends Command
             'password'=> bcrypt('testify_app')
         ]);
 
-        $user->assignRole('admin');        
+        $user->assignRole('admin');
+
+        $emptiesManager = User::create([
+            'name'=>'empties manager',
+            'email'=>'empties@opk.com',
+            'password'=>bcrypt('empties')
+        ]);
+
+        $user->assignRole('empties manager');
     }
 }
