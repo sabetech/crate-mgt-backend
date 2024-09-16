@@ -43,7 +43,7 @@ class EventServiceProvider extends ServiceProvider
         InventoryOrderApproved::class => [
             UpdateInventoryTransactions::class,
             //UpdateCustomerEmptiesAfterInventoryTransaction::class,
-            UpdateEmptiesTransaction::class
+            //UpdateEmptiesTransaction::class -- this will be done by the update inventory transaction event!!
         ],
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
