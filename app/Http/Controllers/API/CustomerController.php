@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\CustomerEmptiesAccount;
 use Illuminate\Support\Facades\Log;
+use App\Imports\CustomerImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class CustomerController extends Controller
 {
@@ -43,6 +46,20 @@ class CustomerController extends Controller
                 "data" => $customers
             ]);
         }
+
+    }
+
+    public function importExcel(Request $request) {
+        //import excel file
+
+        $file = $request->file('file');
+
+        Excel::import(new CustomerImport, $file);
+
+        return response()->json([
+            "success" => true,
+            "data" => "Imported Successfully"
+        ]);
 
     }
 

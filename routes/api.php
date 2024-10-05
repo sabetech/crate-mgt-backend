@@ -43,6 +43,8 @@ Route::group(["prefix" => "v1"], function () {
         return response()->json($array);
     });
 
+    // Route::post("customers/import-excel", [\App\Http\Controller\API\CustomerController::class, "importExcel"]);
+
     Route::group(["middleware" => "auth:sanctum"], function () {
 
         Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
@@ -72,6 +74,7 @@ Route::group(["prefix" => "v1"], function () {
             Route::post('/new/{id}', [\App\Http\Controllers\API\ProductController::class, 'modifyProduct']);
         });
 
+        Route::post("customers/import-excel", [\App\Http\Controllers\API\CustomerController::class, "importExcel"]);
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);

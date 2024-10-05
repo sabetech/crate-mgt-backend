@@ -11,6 +11,7 @@ class Customer extends Model
 {
     use HasFactory;
     protected $table = "customers";
+    protected $guarded = ['id'];
 
     public function customerEmptiesAccount(){
         return $this->hasMany(CustomerEmptiesAccount::class);
@@ -19,4 +20,6 @@ class Customer extends Model
     public function vseLoadout() {
         return $this->hasMany(LoadoutProduct::class);
     }
+
+
 }
