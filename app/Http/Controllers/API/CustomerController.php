@@ -54,7 +54,38 @@ class CustomerController extends Controller
 
         $file = $request->file('file');
 
-        Excel::import(new CustomerImport, $file);
+        // Open the file for reading
+        $fileHandle = fopen($file, 'r');
+
+        // Initialize an array to hold CSV data
+        $csvData = [];
+        $count = 0;
+        // Read the CSV file line by line
+        while (($row = fgetcsv($fileHandle, 1000, ",")) !== FALSE) {
+
+            $count++;
+
+            if ($count == 1) continue;
+
+            // $row is an array of CSV columns
+            $customer = Customer::create([
+                'name' => $row[0],
+                'phone' => $row[1],
+                'customer_type' => $row[2],
+            ]);
+
+            CustomerEmptiesAccount::create([
+                'customer_id' => $customer->id,
+                'product_id' => 1,
+                'quantity_transacted' => $row[3],
+                'date' => date('Y-m-d'),
+                'transaction_type' => "in"
+            ]);
+
+        }
+
+        // Close the file
+        fclose($fileHandle);
 
         return response()->json([
             "success" => true,

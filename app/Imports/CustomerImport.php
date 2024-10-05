@@ -25,10 +25,6 @@ class CustomerImport implements ToCollection
             if ($key == 0)
                 continue;
 
-
-            Log::info("Importing customer: name" . $row[0]);
-            Log::info("Importing customer: phone" . $row[1]);
-            Log::info("Importing customer: customer_type" . $row[2]);
             $customer = Customer::create([
                 'name' => $row[0],
                 'phone' => $row[1],
