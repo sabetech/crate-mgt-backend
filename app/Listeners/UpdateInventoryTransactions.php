@@ -72,11 +72,17 @@ class UpdateInventoryTransactions
         //update inventory transaction ...
         $user = Auth::user();
 
+        Log::info("product inventory balance", [ $model->product->inventoryBalance ]);
+
         if ($ib = $model->product->inventoryBalance) {
             $previousBalance = $ib->quantity;
         }else{
             $previousBalance = 0;
         }
+
+        Log::info(["updateInventoryTransactionAfterReceivable" => $model]);
+
+        Log::info("PREVIOUS BALANCE:::",[$previousBalance]);
 
         $inventoryTransaction = new InventoryTransaction;
         $inventoryTransaction->product_id = $model->product_id;
@@ -84,7 +90,7 @@ class UpdateInventoryTransactions
         $inventoryTransaction->activity = InventoryConstants::PURCHASE_ORDER;
         $inventoryTransaction->comment = "A truck came and gave stuff. Update with somethign sensible!";
         $inventoryTransaction->quantity = $model->quantity;
-        $inventoryTransaction->balance = (isset($previousTransaction->balance)) ? $previousTransaction->balance + $model->quantity : $model->quantity;
+        $inventoryTransaction->balance = $previousBalance + $model->quantity;
         $inventoryTransaction->user_id = $user->id;
         $inventoryTransaction->save();
     }

@@ -24,9 +24,9 @@ class UpdateProductBalanceAfterInventoryTransaction
     {
         $inventoryTransaction = $event->inventoryTransaction;
 
-        Log::info('UpdateProductBalanceAfterInventoryTransaction');
-        Log::info($inventoryTransaction);
-        Log::info($inventoryTransaction->product);
+        Log::info(['Running UpdateProductBalanceAfterInventoryTransaction' => $inventoryTransaction]);
+
+        Log::info(['Product whose balance is being updated' => $inventoryTransaction->product]);
         $product = $inventoryTransaction->product;
 
         InventoryBalance::updateOrCreate([

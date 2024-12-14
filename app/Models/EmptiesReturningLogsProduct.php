@@ -17,14 +17,14 @@ class EmptiesReturningLogsProduct extends Model
         static::created(function ($model) {
             Log::info("Empties returning created");
             Log::info($model);
-            // ReturnProductToGGBL::dispatch($model);
+
             event(new ReturnProductToGGBL($model));
         });
 
         static::updated(function ($model) {
             Log::info("Empties returning updated");
             Log::info($model);
-            // ReturnProductToGGBL::dispatch($model);
+
             event(new ReturnProductToGGBL($model));
         });
     }

@@ -24,6 +24,7 @@ use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 use App\Listeners\UpdateEmptiesLog;
 use App\Listeners\UpdateEmptiesTransaction;
 use App\Listeners\UpdateEmptiesBalance;
+use App\Listeners\UpdateInventoryAfterInventoryReceivedFromGGBL;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -42,11 +43,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         InventoryOrderApproved::class => [
             UpdateInventoryTransactions::class,
-            //UpdateCustomerEmptiesAfterInventoryTransaction::class,
-            UpdateEmptiesTransaction::class //-- this will be done by the update inventory transaction event!!
         ],
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
+            UpdateEmptiesTransaction::class,
         ],
         StockTakenForProduct::class => [
             UpdateProductBalanceAfterStockTaken::class,
@@ -54,9 +54,10 @@ class EventServiceProvider extends ServiceProvider
         ReturnProductToGGBL::class => [
             UpdateEmptiesTransaction::class,
         ],
-        ReceivedProductFromGGBL::class => [
-            UpdateInventoryTransactions::class,
-        ],
+        // ReceivedProductFromGGBL::class => [
+        //     UpdateInventoryTransactions::class,
+
+        // ],
         LoadoutProductCreated::class => [
             UpdateInventoryTransactions::class,
         ],
@@ -64,6 +65,7 @@ class EventServiceProvider extends ServiceProvider
             UpdateEmptiesBalance::class,
         ],
         InventoryReceivedFromGBL::class => [
+            UpdateInventoryAfterInventoryReceivedFromGGBL::class,
             UpdateEmptiesLog::class
         ],
         CustomerReturnEmpties::class => [

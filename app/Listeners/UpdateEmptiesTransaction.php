@@ -25,7 +25,6 @@ class UpdateEmptiesTransaction
      */
     public function handle(object $event): void
     {
-
         switch($event->action) {
             case EmptiesConstants::RETURNING_EMPTIES_TO_GGBL:
                 Log::info("Updating Empties on Ground After Shipping to GGBL >>>");
@@ -33,7 +32,6 @@ class UpdateEmptiesTransaction
                 $this->updateEmptiesTransactionOnEmptiesReturned($emptiesReturningProductLog);
                 break;
             case EmptiesConstants::CUSTOMER_RETURN_EMPTIES:
-                // dd($event->customerEmptiesAccount);
                 $customerEmptiesAccount = $event->customerEmptiesAccount;
                 $this->updateEmptiesTransactionOnCustomerReturned($customerEmptiesAccount);
                 break;
@@ -41,13 +39,16 @@ class UpdateEmptiesTransaction
                 $saleOrder = $event->inventoryOrder;
                 $this->updateEmptiesTransactionOnCustomerPurchase($saleOrder);
                 break;
+            case InventoryConstants::PURCHASE_ORDER:
+                $purchaseOrder = $event->inventoryTransaction;
+                $this->updateEmptiesTransactionOnGGBLPurchase($purchaseOrder);
+                break;
         }
     }
 
     public function updateEmptiesTransactionOnEmptiesReturned($model): void
     {
-        Log::info("Update Empties Transaction");
-        Log::info($model);
+        Log::info(["Update Empties Transaction =>>" => $model]);
 
         $emptiesTransaction = new EmptiesTransaction;
         $emptiesTransaction->transaction_id = "OPK-EMPT-".date("YmdHis");
@@ -108,5 +109,22 @@ class UpdateEmptiesTransaction
             'quantity_transacted' => $sale->quantity,
             'transaction_type' => 'out',
         ]);
+    }
+
+    public function updateEmptiesTransactionOnGGBLPurchase($model): void {
+
+        Log::info(["Product::" => $model->product]);
+        //if product is empty returnable ...
+        if (!$model->product->empty_returnable) return;
+
+        $emptiesTransaction = new EmptiesTransaction;
+        $emptiesTransaction->transaction_id = "OPK-EMPT-".date("YmdHis");
+        $emptiesTransaction->datetime = date("Y-m-d H:i:s");
+        $emptiesTransaction->product_id = $model->product_id;
+        $emptiesTransaction->quantity = $model->quantity;
+        $emptiesTransaction->transaction_type = 'in';
+        $emptiesTransaction->activity = EmptiesConstants::RECEIVING_EMPTIES_FROM_GGBL;
+
+        $emptiesTransaction->save();
     }
 }

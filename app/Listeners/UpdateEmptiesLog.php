@@ -29,7 +29,7 @@ class UpdateEmptiesLog
     {
         //
         $data = $event->data;
-        Log::info($data);
+        Log::info(["Update Empties Log" => $data]);
 
         //get update quantity based on whether these guys are actually empties ...
         $emptiesProductData = [];
@@ -49,7 +49,7 @@ class UpdateEmptiesLog
         if ($totalEmptiesQuantity === 0) return;
 
         Log::info($emptiesProductData);
-        Log::info("LETS Save empties recievign log");
+        Log::info("Saving Empties Receiving Log ...");
         Log::info($data);
 
         $emptiesReceivingLog = EmptiesReceivingLog::updateOrCreate(

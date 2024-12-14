@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\EmptiesBalance;
 use App\Constants\EmptiesConstants;
+use Illuminate\Support\Facades\Log;
 
 
 class UpdateEmptiesBalance
@@ -25,6 +26,8 @@ class UpdateEmptiesBalance
     {
         $model = $event->emptyTransaction;
 
+        Log::info(["UpdateEmptiesBalance Model" => $model]);
+
         //modify empties balances here ...
         $existingBalance = EmptiesBalance::where('product_id', $model->product_id)->first();
         $finalQuantity = 0;
@@ -40,7 +43,7 @@ class UpdateEmptiesBalance
         }
 
         if ($model->activity === EmptiesConstants::CUSTOMER_PURCHASE) {
-
+            //TODO :: REMEMBER TO UPDATE EMPTIES BALANCE FOR CUSTOMERSS HERE .. THIS IS 14 Dec 2024 TODAY!!
         }
 
         EmptiesBalance::updateOrCreate([

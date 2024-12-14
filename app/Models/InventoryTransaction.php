@@ -17,8 +17,7 @@ class InventoryTransaction extends Model
 
     protected static function booted() {
         static::created(function ($model) {
-            Log::info("InventoryTransaction created");
-            Log::info($model);
+            Log::info(["InventoryTransaction created::" => json_encode($model)]);
 
             event(new InventoryTransactionCreated($model));
         });

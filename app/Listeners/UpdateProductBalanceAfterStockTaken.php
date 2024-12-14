@@ -24,10 +24,10 @@ class UpdateProductBalanceAfterStockTaken
         //
         $stockItem = $event->stockItem;
         $product = $stockItem->product;
-        // InventoryBalance::updateOrCreate([
-        //     'product_id' => $product->id],[
-        //     'quantity' => $stockItem->quantity,
-        // ]);
+        InventoryBalance::updateOrCreate([
+            'product_id' => $product->id],[
+            'quantity' => $stockItem->quantity,
+        ]);
 
         //Don't do this just yet
 
