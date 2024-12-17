@@ -78,7 +78,7 @@ class UpdateEmptiesTransaction
         $order = $model->order;
 
         foreach($order->sales as $sale) {
-
+            if (!$sale->product->empty_returnable) continue;
             $emptiesTransaction = new EmptiesTransaction;
             $emptiesTransaction->transaction_id = $order->transaction_id;
             $emptiesTransaction->datetime = date("Y-m-d H:i:s");

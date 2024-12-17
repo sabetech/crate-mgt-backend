@@ -44,6 +44,7 @@ class UpdateEmptiesBalance
 
         if ($model->activity === EmptiesConstants::CUSTOMER_PURCHASE) {
             //TODO :: REMEMBER TO UPDATE EMPTIES BALANCE FOR CUSTOMERSS HERE .. THIS IS 14 Dec 2024 TODAY!!
+            //YIKES
         }
 
         EmptiesBalance::updateOrCreate([

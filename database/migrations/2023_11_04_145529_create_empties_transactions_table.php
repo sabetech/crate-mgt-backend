@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId("product_id")->constrained("products");
             $table->integer('quantity');
             $table->enum('transaction_type',['in', 'out']);
-            $table->enum('activity', ['customer_empties_return', 'ship_to_ggbl']);
+            $table->enum('activity', ['customer_empties_return', 'ship_to_ggbl', 'receive_from_ggbl', 'customer_purchase', 'loadout_products', 'loadout_product_returns']);
             $table->timestamps();
             $table->softDeletes();
         });

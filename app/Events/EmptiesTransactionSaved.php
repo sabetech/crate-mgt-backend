@@ -9,28 +9,20 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Constants\InventoryConstants;
 
-class InventoryTransactionCreated
+class EmptiesTransactionSaved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $inventoryTransaction;
-    public $action;
+    public $transactionsDetail;
     /**
      * Create a new event instance.
      */
-    public function __construct($inventoryTransaction)
+    public function __construct($transactionsDetail)
     {
-        $this->inventoryTransaction = $inventoryTransaction;
-        if ($inventoryTransaction->activity == InventoryConstants::SALE_REQUEST) {
-            $this->action = InventoryConstants::SALE_REQUEST;
-        }
-
-        if ($inventoryTransaction->activity == InventoryConstants::PURCHASE_ORDER) {
-            $this->action = InventoryConstants::PURCHASE_ORDER;
-        }
-
+        //
+        $this->transactionsDetail = $transactionsDetail;
     }
+
     /**
      * Get the channels the event should broadcast on.
      *

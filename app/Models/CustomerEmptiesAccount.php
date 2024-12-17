@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Events\CustomerReturnEmpties;
+use App\Events\CustomerEmptiesAccountEntryCreated;
+use App\Constants\EmptiesConstants;
 
 class CustomerEmptiesAccount extends Model
 {
@@ -14,13 +15,17 @@ class CustomerEmptiesAccount extends Model
 
     protected static function booted() {
         static::created(function ($model) {
-            //customer empties account Created ...
-            event(new CustomerReturnEmpties($model));
+            if ($model->transaction_type === 'in') {
+                $model->activity = EmptiesConstants::CUSTOMER_RETURN_EMPTIES;
+                event(new CustomerEmptiesAccountEntryCreated($model));
+            }
+
+
         });
 
-        static::updated(function ($model) {
+        // static::updated(function ($model) {
 
-        });
+        // });
     }
 
     public function product(){

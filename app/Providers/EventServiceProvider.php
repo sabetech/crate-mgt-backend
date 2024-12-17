@@ -6,16 +6,18 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
-use App\Events\SalesOrderCreated;
+use App\Events\CustomerEmptiesAccountEntryCreated;
 use App\Events\InventoryOrderApproved;
 use App\Events\InventoryTransactionCreated;
 use App\Events\StockTakenForProduct;
 use App\Events\InventoryReceivedFromGBL;
 use App\Events\ReceivedProductFromGGBL;
+use App\Events\CustomerGetsEmptiesViaPurchase;
 use App\Events\LoadoutProductCreated;
 use App\Events\ReturnProductToGGBL;
 use App\Events\EmptiesTransactionCreated;
 use App\Events\CustomerReturnEmpties;
+use App\Listeners\UpdateEmptiesTransactionTable;
 use App\Listeners\UpdateInventoryPendingOrders;
 use App\Listeners\UpdateInventoryTransactions;
 use App\Listeners\UpdateCustomerEmptiesAfterInventoryTransaction;
@@ -23,9 +25,11 @@ use App\Listeners\UpdateProductBalanceAfterStockTaken;
 use App\Listeners\UpdateProductBalanceAfterInventoryTransaction;
 use App\Listeners\UpdateEmptiesLog;
 use App\Listeners\UpdateEmptiesTransaction;
-use App\Listeners\UpdateEmptiesBalance;
-use App\Listeners\UpdateInventoryAfterInventoryReceivedFromGGBL;
-
+use App\Listeners\UpdateEmptiesReceivingLogProductsOnEmptiesTransactionCreated;
+use App\Listeners\UpdateEmptiesBalanceOnEmptiesTransactionCreated;
+use App\Listeners\UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated;
+use App\Listeners\UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated;
+use App\Models\EmptiesTransaction;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -38,39 +42,26 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        SalesOrderCreated::class => [
-            UpdateInventoryPendingOrders::class,
-        ],
-        InventoryOrderApproved::class => [
-            UpdateInventoryTransactions::class,
-        ],
-        InventoryTransactionCreated::class => [
-            UpdateProductBalanceAfterInventoryTransaction::class,
-            UpdateEmptiesTransaction::class,
-        ],
-        StockTakenForProduct::class => [
-            UpdateProductBalanceAfterStockTaken::class,
-        ],
-        ReturnProductToGGBL::class => [
-            UpdateEmptiesTransaction::class,
-        ],
-        // ReceivedProductFromGGBL::class => [
-        //     UpdateInventoryTransactions::class,
 
-        // ],
-        LoadoutProductCreated::class => [
-            UpdateInventoryTransactions::class,
+        CustomerEmptiesAccountEntryCreated::class => [
+            UpdateEmptiesTransactionTable::class,
         ],
+
         EmptiesTransactionCreated::class => [
-            UpdateEmptiesBalance::class,
+            //These are conditional listeners
+            UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated::class,
+            UpdateEmptiesReceivingLogProductsOnEmptiesTransactionCreated::class,
+
+            //these are always run
+            UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated::class,
+            UpdateEmptiesBalanceOnEmptiesTransactionCreated::class,
         ],
-        InventoryReceivedFromGBL::class => [
-            UpdateInventoryAfterInventoryReceivedFromGGBL::class,
-            UpdateEmptiesLog::class
-        ],
-        CustomerReturnEmpties::class => [
-            UpdateEmptiesTransaction::class,
-        ],
+
+
+
+
+
+
     ];
 
     /**

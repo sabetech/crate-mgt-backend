@@ -14,7 +14,7 @@ return new class extends Migration
         //
         // Schema::table('empties_transactions', function (Blueprint $table) {
             // $table->enum('activity', ['customer_empties_return', 'ship_to_ggbl', 'customer_purchase'])->change();
-            DB::statement("ALTER TABLE `empties_transactions` MODIFY `activity` ENUM('customer_empties_return', 'ship_to_ggbl', 'customer_purchase') NOT NULL");
+            DB::statement("ALTER TABLE `empties_transactions` MODIFY `activity` ENUM('customer_empties_return', 'ship_to_ggbl', 'customer_purchase', 'loadout_products', 'loadout_product_returns', 'receive_from_ggbl') NOT NULL");
         // });
     }
 

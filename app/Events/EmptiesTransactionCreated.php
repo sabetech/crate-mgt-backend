@@ -9,7 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-
+use Illuminate\Support\Facades\Log;
+//OLd
 class EmptiesTransactionCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -21,6 +22,7 @@ class EmptiesTransactionCreated
     public function __construct($emptyTransaction)
     {
         //
+        Log::Debug(["Empty Transaction Created" => $emptyTransaction]);
         $this->emptyTransaction = $emptyTransaction;
     }
 

@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
-class EmptiesLogProduct extends Model
+class OpenCloseEmptiesStock extends Model
 {
     use HasFactory;
-    protected $table='empties_log_products';
 
+    protected $table = 'daily_open_close_empties_stock';
     protected $guarded = ['id'];
-
-
 
 }
