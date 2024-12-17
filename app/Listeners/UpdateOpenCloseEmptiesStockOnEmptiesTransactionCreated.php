@@ -39,12 +39,17 @@ class UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated
             $emptiesOpenCloseStock->save();
 
         }else{
-            OpenCloseEmptiesStock::create([
-                'date' => date("Y-m-d", strtotime($event->emptyTransaction->datetime)),
-                'product_id' => $event->emptyTransaction->product_id,
-                'opening_stock' => $event->emptyTransaction->quantity,
-                'closing_stock' => $event->emptyTransaction->quantity
-            ]);
+            $latestProductEmptyStock = OpenCloseEmptiesStock::where('product_id', $event->emptyTransaction->product_id)->latest()->first();
+
+            if ($latestProductEmptyStock) {
+
+                OpenCloseEmptiesStock::create([
+                    'date' => date("Y-m-d", strtotime($event->emptyTransaction->datetime)),
+                    'product_id' => $event->emptyTransaction->product_id,
+                    'opening_stock' => $latestProductEmptyStock->closing_stock,
+                    'closing_stock' => ($event->emptyTransaction->transaction_type == 'in') ? ($latestProductEmptyStock->closing_stock + $event->emptyTransaction->quantity) : ($latestProductEmptyStock->closing_stock - $event->emptyTransaction->quantity),
+                ]);
+            }
         }
     }
 }

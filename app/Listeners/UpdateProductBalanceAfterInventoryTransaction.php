@@ -23,10 +23,6 @@ class UpdateProductBalanceAfterInventoryTransaction
     public function handle(object $event): void
     {
         $inventoryTransaction = $event->inventoryTransaction;
-
-        Log::info(['Running UpdateProductBalanceAfterInventoryTransaction' => $inventoryTransaction]);
-
-        Log::info(['Product whose balance is being updated' => $inventoryTransaction->product]);
         $product = $inventoryTransaction->product;
 
         InventoryBalance::updateOrCreate([

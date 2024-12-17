@@ -30,6 +30,7 @@ use App\Listeners\UpdateEmptiesBalanceOnEmptiesTransactionCreated;
 use App\Listeners\UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated;
 use App\Listeners\UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated;
 use App\Events\SalesOrderCreated;
+use App\Listeners\UpdateOpenCloseProductStockAfterInventoryTransaction;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -67,6 +68,12 @@ class EventServiceProvider extends ServiceProvider
         InventoryOrderApproved::class => [
             UpdateInventoryTransactions::class,
             UpdateCustomerEmptiesAfterInventoryTransaction::class,
+        ],
+
+        //This is fired after UpdateInventoryTransactions listener is run
+        InventoryTransactionCreated::class => [
+            UpdateProductBalanceAfterInventoryTransaction::class,
+            UpdateOpenCloseProductStockAfterInventoryTransaction::class,
         ]
 
 

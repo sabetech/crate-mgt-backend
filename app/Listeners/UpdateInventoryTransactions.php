@@ -46,9 +46,7 @@ class UpdateInventoryTransactions
 
     public function updateInventoryAfterOrderApproval($inventoryOrder, $action) {
         $order = $inventoryOrder->order;
-        Log::info('updateInventoryAfterOrderApproval');
-        Log::info($order);
-        Log::info($order->sales);
+        Log::info('updateInventoryAfterOrderApproval', [$order->sales]);
 
         foreach($order->sales as $sale) {
 
@@ -64,7 +62,6 @@ class UpdateInventoryTransactions
                 'user_id' => $order->user_id
             ]);
         }
-
     }
 
     public function updateInventoryTransactionAfterReceivable($model) {
