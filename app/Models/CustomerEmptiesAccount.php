@@ -20,6 +20,11 @@ class CustomerEmptiesAccount extends Model
                 event(new CustomerEmptiesAccountEntryCreated($model));
             }
 
+            if ($model->transaction_type === 'out') {
+                $model->activity = EmptiesConstants::CUSTOMER_PURCHASE;
+                event(new CustomerEmptiesAccountEntryCreated($model));
+            }
+
 
         });
 

@@ -29,7 +29,7 @@ use App\Listeners\UpdateEmptiesReceivingLogProductsOnEmptiesTransactionCreated;
 use App\Listeners\UpdateEmptiesBalanceOnEmptiesTransactionCreated;
 use App\Listeners\UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated;
 use App\Listeners\UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated;
-use App\Models\EmptiesTransaction;
+use App\Events\SalesOrderCreated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -42,6 +42,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        SalesOrderCreated::class => [
+            UpdateInventoryPendingOrders::class,
+        ],
+
+        //handle reverse salesOrder
 
         CustomerEmptiesAccountEntryCreated::class => [
             UpdateEmptiesTransactionTable::class,
@@ -56,6 +62,12 @@ class EventServiceProvider extends ServiceProvider
             UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated::class,
             UpdateEmptiesBalanceOnEmptiesTransactionCreated::class,
         ],
+
+        //Customer Approves an Inventory Order from sales order attempt
+        InventoryOrderApproved::class => [
+            UpdateInventoryTransactions::class,
+            UpdateCustomerEmptiesAfterInventoryTransaction::class,
+        ]
 
 
 

@@ -64,8 +64,7 @@ class UpdateInventoryTransactions
                 'user_id' => $order->user_id
             ]);
         }
-        //other events should be
-        // - update customer empties
+
     }
 
     public function updateInventoryTransactionAfterReceivable($model) {

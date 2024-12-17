@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Constants\InventoryConstants;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\CustomerEmptiesAccount;
@@ -27,16 +28,22 @@ class UpdateCustomerEmptiesAfterInventoryTransaction
 
         Log::info("Inventory Order....");
         Log::info($inventoryOrder);
-        
-        $inventoryOrder->order->sales->each(function($sale) use ($inventoryOrder) {
-            $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);
-        });
+
+        switch($event->action) {
+            case InventoryConstants::SALE_REQUEST:
+                $inventoryOrder->order->sales->each(function($sale) use ($inventoryOrder) {
+                    $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);
+                });
+            break;
+
+        }
+
     }
- 
+
     public function updateCustomerEmptiesAccount($inventoryOrder, $sale) {
-        
+
         Log::info($sale->product);
-        
+
         if (!$sale->product->empty_returnable) return;
         Log::info("Update Customer Empties Account");
         CustomerEmptiesAccount::create([

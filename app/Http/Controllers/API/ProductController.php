@@ -283,7 +283,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function approveOrder(InventoryOrder $inventoryOrder, Request $request) {
+    public function approveOrder(InventoryOrder $inventoryOrder) {
 
         $inventoryOrder->status = 'approved';
         $inventoryOrder->save();
