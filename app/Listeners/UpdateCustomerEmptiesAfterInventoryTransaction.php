@@ -29,7 +29,7 @@ class UpdateCustomerEmptiesAfterInventoryTransaction
         Log::info("Inventory Order....");
         Log::info($inventoryOrder);
 
-        switch($event->action) {
+        switch($event->activity) {
             case InventoryConstants::SALE_REQUEST:
                 $inventoryOrder->order->sales->each(function($sale) use ($inventoryOrder) {
                     $this->updateCustomerEmptiesAccount($inventoryOrder, $sale);

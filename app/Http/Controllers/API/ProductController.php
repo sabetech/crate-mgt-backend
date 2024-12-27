@@ -16,9 +16,12 @@ use App\Models\InventoryTransaction;
 use App\Models\InventoryBalance;
 use App\Events\InventoryOrderApproved;
 use Carbon\Carbon;
+use App\Constants\InventoryConstants;
 use App\Events\InventoryReceivedFromGBL;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
+use App\Models\EmptiesReceivingLog;
+use App\Models\EmptiesLogProduct;
 
 class ProductController extends Controller
 {
@@ -309,7 +312,6 @@ class ProductController extends Controller
         $user = Auth::user();
 
         $products = json_decode($products, true);
-        Log::info($request->all());
 
         $image = $request->file('image_ref');
         $deployedEnv = config('deployment.environment');
@@ -328,8 +330,6 @@ class ProductController extends Controller
             ])->getSecurePath();
         }
 
-        Log::info($image_path);
-
         foreach ($products as $product) {
             InventoryReceivable::updateOrCreate([
                 'date' => $date,
@@ -343,16 +343,60 @@ class ProductController extends Controller
             ]);
         }
 
-        $dataToDispatch = $request->all();
-        $dataToDispatch = [...$dataToDispatch, 'imageUrl' => $image_path];
-
-        InventoryReceivedFromGBL::dispatch($dataToDispatch);
-
+        $this->createEmptiesLogFromReceivable($request, $image_path );
 
         return response()->json([
             "success" => true,
             "data" => "Inventory Receivable saved successfully"
         ]);
+    }
+
+    public function createEmptiesLogFromReceivable(Request $request, $imgUrl) {
+        $emptiesProductData = [];
+        $totalEmptiesQuantity = 0;
+
+        $data = $request->all();
+        $productsData = json_decode($data['products']);
+
+        foreach ($productsData as $productFromClient) {
+            $product = Product::find($productFromClient->product);
+
+            if ($product->empty_returnable) {
+                $emptiesProductData[$product->id] = $productFromClient->quantity;
+                $totalEmptiesQuantity += $productFromClient->quantity;
+            }
+        }
+
+        if ($totalEmptiesQuantity === 0) return;
+
+        Log::info("Saving Empties Receiving Log ...");
+        Log::info($data);
+
+        $emptiesReceivingLog = EmptiesReceivingLog::updateOrCreate(
+            [
+                'date' => $data['date'],
+                'purchase_order_number' => $data['purchase_order_id']
+            ],
+            [
+                'quantity_received' => $totalEmptiesQuantity,
+                'number_of_pallets' => $data['pallets_number'],
+                'image_reference' => $imgUrl,
+                'vehicle_number' => $data['vehicle_number'],
+                'delivered_by' => $data['delivered_by'],
+                'received_by' => $data['received_by']
+            ]
+        );
+
+        foreach ($emptiesProductData as $productId => $quantity) {
+
+            EmptiesLogProduct::updateOrCreate([
+                'product_id' => $productId,
+                'empties_log_id' => $emptiesReceivingLog->id
+            ],
+            [
+                'quantity' => $quantity
+            ]);
+        }
     }
 
     public function returnsFromVse(Request $request) {

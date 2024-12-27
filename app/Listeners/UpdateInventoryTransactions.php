@@ -7,7 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use App\Models\InventoryTransaction;
 use App\Constants\InventoryConstants;
 use Illuminate\Support\Facades\Log;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateInventoryTransactions
 {
@@ -25,13 +25,13 @@ class UpdateInventoryTransactions
     public function handle(object $event): void
     {
         //
-        $action = $event->action;
+        $action = $event->activity;
         switch($action) {
             case InventoryConstants::SALE_REQUEST:
                 $this->updateInventoryAfterOrderApproval($event->inventoryOrder, $action);
             break;
             case InventoryConstants::PURCHASE_ORDER:
-                $this->updateInventoryTransactionAfterReceivable($event->receivedProduct);
+                $this->updateInventoryTransactionAfterReceivable($event->inventoryReceivable);
             break;
             case InventoryConstants::LOAD_OUT:
                 $this->updateInventoryTransactionAfterLoadout($event->loadoutProduct);

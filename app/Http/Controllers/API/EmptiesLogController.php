@@ -57,7 +57,7 @@ class EmptiesLogController extends Controller
             ]
         );
 
-        Log::info($emptiesReturnedLogs);
+        Log::info(["Empty Returned Logs" => $emptiesReturnedLogs]);
 
         if ($emptiesReturnedLogs) {
             $attributes = json_decode($request->get('products'));

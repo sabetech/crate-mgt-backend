@@ -15,14 +15,14 @@ class InventoryOrderApproved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $inventoryOrder;
-    public $action;
+    public $activity;
     /**
      * Create a new event instance.
      */
     public function __construct($inventoryOrder)
     {
         $this->inventoryOrder = $inventoryOrder;
-        $this->action = InventoryConstants::SALE_REQUEST;
+        $this->activity = InventoryConstants::SALE_REQUEST;
     }
 
     /**

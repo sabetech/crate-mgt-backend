@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Constants\EmptiesConstants;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,28 +9,22 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Constants\InventoryConstants;
 
-class CustomerEmptiesAccountEntryCreated
+class InventoryReceivableCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $customerEmptiesAccountEntry;
+    public $inventoryReceivable;
     public $activity;
 
     /**
      * Create a new event instance.
      */
-    public function __construct( $customerEmptiesAccountEntry )
+    public function __construct($inventoryReceivable)
     {
-
-        $this->customerEmptiesAccountEntry = $customerEmptiesAccountEntry;
-
-        if ($customerEmptiesAccountEntry->transaction_type === 'in') {
-            $this->activity = EmptiesConstants::CUSTOMER_RETURN_EMPTIES;
-        }else {
-            $this->activity = EmptiesConstants::CUSTOMER_PURCHASE;
-        }
-
+        //
+        $this->inventoryReceivable = $inventoryReceivable;
+        $this->activity = InventoryConstants::PURCHASE_ORDER;
     }
 
     /**

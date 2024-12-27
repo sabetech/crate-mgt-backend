@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class EmptiesLogProduct extends Model
 {
     use HasFactory;
-    protected $table='empties_log_products';
+    protected $table='empties_receiving_log_products';
 
     protected $guarded = ['id'];
 

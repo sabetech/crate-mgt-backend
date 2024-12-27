@@ -15,7 +15,6 @@ class EmptiesTransactionCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $emptyTransaction;
-
     /**
      * Create a new event instance.
      */

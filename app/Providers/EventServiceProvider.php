@@ -31,6 +31,7 @@ use App\Listeners\UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated;
 use App\Listeners\UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated;
 use App\Events\SalesOrderCreated;
 use App\Listeners\UpdateOpenCloseProductStockAfterInventoryTransaction;
+use App\Events\InventoryReceivableCreated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -54,12 +55,12 @@ class EventServiceProvider extends ServiceProvider
             UpdateEmptiesTransactionTable::class,
         ],
 
-        EmptiesTransactionCreated::class => [
-            //These are conditional listeners
-            UpdateEmptiesReturnLogProductsOnEmptiesTransactionCreated::class,
-            UpdateEmptiesReceivingLogProductsOnEmptiesTransactionCreated::class,
+        InventoryReceivableCreated::class => [
+            UpdateInventoryTransactions::class,
+            UpdateEmptiesTransactionTable::class,
+        ],
 
-            //these are always run
+        EmptiesTransactionCreated::class => [
             UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated::class,
             UpdateEmptiesBalanceOnEmptiesTransactionCreated::class,
         ],
@@ -74,9 +75,12 @@ class EventServiceProvider extends ServiceProvider
         InventoryTransactionCreated::class => [
             UpdateProductBalanceAfterInventoryTransaction::class,
             UpdateOpenCloseProductStockAfterInventoryTransaction::class,
+        ],
+
+        //This is fired for ReturnProductToGGBL
+        ReturnProductToGGBL::class => [
+            UpdateEmptiesTransactionTable::class,
         ]
-
-
 
 
 
