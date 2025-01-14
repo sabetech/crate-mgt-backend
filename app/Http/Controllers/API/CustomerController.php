@@ -70,17 +70,20 @@ class CustomerController extends Controller
 
             if ($count == 1) continue;
 
+            if (strtolower($row[2]) != "wholesaler" && strtolower($row[2]) != "retailer" && strtolower($row[2]) != "retailer-vse") {
+                continue;
+            }
             // $row is an array of CSV columns
             $customer = Customer::create([
                 'name' => $row[0],
                 'phone' => $row[1],
-                'customer_type' => $row[2],
+                'customer_type' => strtolower($row[2]),
             ]);
 
             CustomerEmptiesAccount::create([
                 'customer_id' => $customer->id,
                 'product_id' => 1,
-                'quantity_transacted' => $row[3],
+                'quantity_transacted' => -($row[3]),
                 'date' => date('Y-m-d'),
                 'transaction_type' => "in"
             ]);

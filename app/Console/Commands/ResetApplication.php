@@ -37,8 +37,10 @@ class ResetApplication extends Command
         $this->info('Resetting the database...');
 
         $this->call('migrate:fresh');
-        $this->call('app:read_products_csv_and_save');
+        $this->call('app:setup-product-initial-stock', ['file_path' => 'storage/app/public/products_with_stock_as_at_2025-01-13.csv']);
+        // $this->call('app:read_products_csv_and_save');
         $this->call('app:setup-roles-for-users');
+
 
         $this->info('Creating New Admin User...');
 
