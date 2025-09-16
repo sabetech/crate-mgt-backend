@@ -32,6 +32,7 @@ use App\Listeners\UpdateOpenCloseEmptiesStockOnEmptiesTransactionCreated;
 use App\Events\SalesOrderCreated;
 use App\Listeners\UpdateOpenCloseProductStockAfterInventoryTransaction;
 use App\Events\InventoryReceivableCreated;
+use App\Events\PromoStockCreated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -77,13 +78,14 @@ class EventServiceProvider extends ServiceProvider
             UpdateOpenCloseProductStockAfterInventoryTransaction::class,
         ],
 
+        PromoStockCreated::class => [
+            UpdateInventoryTransactions::class,
+        ],
+
         //This is fired for ReturnProductToGGBL
         ReturnProductToGGBL::class => [
             UpdateEmptiesTransactionTable::class,
         ]
-
-
-
 
     ];
 

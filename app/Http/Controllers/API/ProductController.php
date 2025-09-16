@@ -22,6 +22,7 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Storage;
 use App\Models\EmptiesReceivingLog;
 use App\Models\EmptiesLogProduct;
+use App\Models\PromoStock;
 
 class ProductController extends Controller
 {
@@ -447,6 +448,60 @@ class ProductController extends Controller
             "success" => true,
             "data" => "Product updated successfully"
         ]);
+    }
+
+    public function promoStockAdjustment(Request $request) {
+        $date = $request->get('date');
+
+        $products = json_decode($request->get('product_quantities'), true);
+
+        Log::info($products);
+        Log::info("Promo Stock Adjustment Request:::", [$request->all()]);
+
+        if ($request->is_promo_stock === "true") {
+
+            foreach ($products as $product) {
+                //update promo stock table and use that to update inventory transaction
+                PromoStock::updateOrCreate(
+                    [
+                        'product_id' => $product['product'],
+                        'date' => date("Y-m-d", strtotime($date)),
+                    ],
+                    [
+                        'quantity' => $product['quantity']
+                    ]
+                );
+            }
+        }else {
+            foreach ($products as $product) {
+                $balance = InventoryTransaction::where('product_id', $product['product'])
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if (!$balance) {
+                    $balance = 0;
+                }else{
+                    $balance = $balance->balance + $product['quantity'];
+                }
+
+                InventoryTransaction::create(
+                   [
+                        'product_id' => $product['product'],
+                        'date' => date("Y-m-d H:i:s", strtotime($date)),
+                        'activity' => InventoryConstants::PROMO_STOCK_REIMBURSEMENT,
+                        'quantity' => $product['quantity'],
+                        'balance' => $balance,
+                        'comment' => "Promo stock reimbursement"
+                    ]
+                );
+            }
+        }
+
+        return response()->json([
+            "success" => true,
+            "data" => "Promo Product updated successfully"
+        ]);
+
     }
 
 }

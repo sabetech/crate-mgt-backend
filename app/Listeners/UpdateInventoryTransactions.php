@@ -36,6 +36,9 @@ class UpdateInventoryTransactions
             case InventoryConstants::LOAD_OUT:
                 $this->updateInventoryTransactionAfterLoadout($event->loadoutProduct);
                 break;
+            case InventoryConstants::PROMO_STOCK_DISBURSEMENT:
+                $this->updateInventoryAfterPromoStockDisbursement($event->promoStockDisbursement);
+                break;
 
             default: //other actions
 
@@ -113,4 +116,24 @@ class UpdateInventoryTransactions
         $inventoryTransaction->save();
     }
 
+    public function updateInventoryAfterPromoStockDisbursement($model) {
+        $user = Auth::user();
+        Log::info(["Show model disbsurment:" => $model]);
+        if ($ib = $model->product->inventoryBalance) {
+            $previousBalance = $ib->quantity;
+        }else{
+            $previousBalance = 0;
+        }
+
+        $inventoryTransaction = new InventoryTransaction;
+        $inventoryTransaction->product_id = $model->product_id;
+        $inventoryTransaction->date = date("Y-m-d H:i:s");
+        $inventoryTransaction->activity = InventoryConstants::PROMO_STOCK_DISBURSEMENT;
+        $inventoryTransaction->comment = "Promo stock disbursement: " . $model->product->name;
+        $inventoryTransaction->quantity = $model->quantity;
+        $inventoryTransaction->balance = $previousBalance + (-$model->quantity);
+        $inventoryTransaction->user_id = $user->id;
+        $inventoryTransaction->save();
+
+    }
 }

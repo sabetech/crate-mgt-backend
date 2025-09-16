@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->foreignId('product_id')->references('id')->on('products');
-            $table->enum('activity',['sale_request', 'load_out', 'return_in', 'purchase_order', 'other']);
+            $table->enum('activity', ['sale_request', 'sales_return', 'load_out', 'loadout_return_in', 'purchase_order', 'promo_stock_disbursement', 'other']);
             $table->string('comment')->nullable();
             $table->boolean('approved')->default(false);
             $table->integer('quantity');

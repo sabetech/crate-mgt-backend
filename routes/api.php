@@ -89,11 +89,13 @@ Route::group(["prefix" => "v1"], function () {
             Route::get('loadout-by-vse', [\App\Http\Controllers\API\ProductController::class, 'getLoadoutByVses']);
             Route::get('pending-orders', [\App\Http\Controllers\API\ProductController::class, 'getPendingOrders']);
             Route::post('approve-order/{inventoryOrder}', [\App\Http\Controllers\API\ProductController::class, 'approveOrder']);
+            Route::post('promo-stock-adjustment', [\App\Http\Controllers\API\ProductController::class, 'promoStockAdjustment']);
         });
 
         Route::group(["prefix" => "sales"], function () {
             Route::post("pay", [\App\Http\Controllers\API\SalesController::class, 'pay']);
             Route::get("/", [\App\Http\Controllers\API\SalesController::class, 'sales']);
+            Route::get('/loadout/vse/{id}', [\App\Http\Controllers\API\SalesController::class, 'getVseLoadoutOrderWithSaleItems']);
             Route::get("/daily-report", [\App\Http\Controllers\API\SalesController::class, 'salesReport']);
         });
     });

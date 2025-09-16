@@ -11,4 +11,7 @@ class InventoryBalance extends Model
 
     protected $table = 'inventory_balance';
     protected $guarded = ['id'];
+
+    
+
 }
