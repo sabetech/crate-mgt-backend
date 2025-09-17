@@ -140,7 +140,36 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $customer = Customer::find($id);
+
+        Log::info("Attempting to delete customer with ID: {$id}");
+
+        if (!$customer) {
+            return response()->json([
+                "success" => false,
+                "data" => "Customer not found"
+            ], 404);
+        }
+
+        // Check for associated records in CustomerEmptiesAccount
+        $associatedRecordsCount = $customer->customerEmptiesAccount()->count();
+
+        Log::info("Associated records count: {$associatedRecordsCount}");
+
+        if ($associatedRecordsCount > 0) {
+            return response()->json([
+                "success" => false,
+                "data" => "Cannot delete customer with associated empties account records"
+            ], 400);
+        }
+
+        // If no associated records, proceed to delete the customer
+        $customer->delete();
+
+        return response()->json([
+            "success" => true,
+            "data" => "Customer deleted successfully"
+        ]);
     }
 
     public function postReturnEmpties(Request $request) {
@@ -240,5 +269,9 @@ class CustomerController extends Controller
             "success" => true,
             "data" => "Customer VSE Sales was recorded successfully"
         ]);
+    }
+
+    public function deleteCustomer($id) {
+
     }
 }

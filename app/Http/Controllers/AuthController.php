@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -74,6 +75,8 @@ class AuthController extends Controller
             'expires_at'=> 60 * 6,
             'token_type'=> 'Bearer'
         ];
+
+        Log::info('User logged in: ', $response);
 
         return response($response, 201);
     }

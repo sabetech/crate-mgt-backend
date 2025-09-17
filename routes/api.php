@@ -70,6 +70,7 @@ Route::group(["prefix" => "v1"], function () {
         Route::apiResource("customers", \App\Http\Controllers\API\CustomerController::class);
         Route::post("customer_empties_returns", [\App\Http\Controllers\API\CustomerController::class, 'postReturnEmpties']);
         Route::get("customer_history/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getCustomerHistory']);
+        // Route::delete("/customers/{id}/delete", [\App\Http\Controllers\API\CustomerController::class, 'destroy']);
 
         Route::get("vse_loadout_info/{id}", [\App\Http\Controllers\API\CustomerController::class, 'getLoadoutInfoByVse']);
         Route::post("record_vse_sales/{id}", [\App\Http\Controllers\API\CustomerController::class, 'postRecordVseSales']);
